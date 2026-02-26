@@ -1,390 +1,1275 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FoodHub - Universal Food Delivery Manager</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-</head>
-<body>
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="logo">
-                <span class="logo-icon">🍔</span>
-                <span class="logo-text">FoodHub</span>
-            </div>
-            <ul class="nav-links">
-                <li><a href="#hero">Home</a></li>
-                <li><a href="#features">Features</a></li>
-                <li><a href="#orders">Orders</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-            <button class="nav-cta" onclick="document.getElementById('addOrderForm').scrollIntoView({behavior: 'smooth'})">Place Order</button>
-        </div>
-    </nav>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-    <section id="hero" class="hero">
-        <div class="hero-bg"></div>
-        <div class="hero-content">
-            <div class="hero-text">
-                <h1 class="hero-title">Your Favorite Food, Delivered Fast</h1>
-                <p class="hero-subtitle">From Pizza to Sushi, Burgers to Biryani - Order from thousands of restaurants. Smart delivery management with real-time tracking and intelligent order assignment.</p>
-                <div class="hero-buttons">
-                    <button class="btn-hero primary" onclick="document.getElementById('addOrderForm').scrollIntoView({behavior: 'smooth'})">
-                        Order Now
-                    </button>
-                    <button class="btn-hero secondary" onclick="document.getElementById('orders').scrollIntoView({behavior: 'smooth'})">
-                        View Orders
-                    </button>
-                </div>
-                <div class="hero-stats">
-                    <div class="stat-item">
-                        <span class="stat-number" id="totalOrders">0</span>
-                        <span class="stat-label">Total Orders</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-number" id="paidOrders">0</span>
-                        <span class="stat-label">Completed</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-number" id="unpaidOrders">0</span>
-                        <span class="stat-label">Pending</span>
-                    </div>
-                </div>
-            </div>
-            <div class="hero-image">
-                <div class="hero-circle"></div>
-                <div class="hero-illustration">
-                    <div class="food-icons">
-                        <span class="food-icon">🍕</span>
-                        <span class="food-icon">🍔</span>
-                        <span class="food-icon">🍜</span>
-                        <span class="food-icon">🍣</span>
-                        <span class="food-icon">🌮</span>
-                        <span class="food-icon">🍝</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+:root {
+    --primary-color: #ff6b35;
+    --primary-dark: #e64a19;
+    --secondary-color: #1e293b;
+    --accent-color: #fbbf24;
+    --success-color: #10b981;
+    --danger-color: #ef4444;
+    --warning-color: #f59e0b;
+    
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8fafc;
+    --bg-dark: #0f172a;
+    --text-primary: #1e293b;
+    --text-secondary: #64748b;
+    --text-light: #94a3b8;
+    --border-color: #e2e8f0;
+    
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+    --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.15);
+    
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+    
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 1rem;
+    --spacing-md: 1.5rem;
+    --spacing-lg: 2rem;
+    --spacing-xl: 3rem;
+    --spacing-2xl: 4rem;
+    
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
 
-    <section id="features" class="features-section">
-        <div class="section-header-center">
-            <h2 class="section-title">Why Choose FoodHub</h2>
-            <p class="section-description">Advanced delivery management system that handles orders from all your favorite restaurants</p>
-        </div>
-        <div class="features-grid">
-            <div class="feature-card">
-                <div class="feature-icon">🚚</div>
-                <h3>Fast Delivery</h3>
-                <p>Lightning-fast delivery with our smart routing algorithm that automatically finds and assigns the nearest available order.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">🎯</div>
-                <h3>Smart Assignment</h3>
-                <p>Intelligent system automatically assigns deliveries to the nearest unpaid orders within your specified distance radius.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">📊</div>
-                <h3>Real-time Tracking</h3>
-                <p>Track all your orders in real-time with comprehensive dashboard, advanced filtering, and live status updates.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">🍽️</div>
-                <h3>All Cuisines</h3>
-                <p>Pizza, Burgers, Sushi, Chinese, Indian, Italian, Mexican and more - order from any restaurant in your area.</p>
-            </div>
-        </div>
-    </section>
+html {
+    scroll-behavior: smooth;
+}
 
-    <section class="cuisines-section">
-        <div class="container-wide">
-            <div class="section-header-center">
-                <h2 class="section-title">Popular Cuisines We Deliver</h2>
-                <p class="section-description">Order from your favorite restaurants across all cuisine types</p>
-            </div>
-            <div class="cuisines-grid">
-                <div class="cuisine-card">
-                    <div class="cuisine-emoji">🍕</div>
-                    <h4>Italian</h4>
-                    <p>Pizza, Pasta, Risotto</p>
-                </div>
-                <div class="cuisine-card">
-                    <div class="cuisine-emoji">🍔</div>
-                    <h4>American</h4>
-                    <p>Burgers, Fries, Wings</p>
-                </div>
-                <div class="cuisine-card">
-                    <div class="cuisine-emoji">🍜</div>
-                    <h4>Chinese</h4>
-                    <p>Noodles, Fried Rice, Dim Sum</p>
-                </div>
-                <div class="cuisine-card">
-                    <div class="cuisine-emoji">🍣</div>
-                    <h4>Japanese</h4>
-                    <p>Sushi, Ramen, Tempura</p>
-                </div>
-                <div class="cuisine-card">
-                    <div class="cuisine-emoji">🌮</div>
-                    <h4>Mexican</h4>
-                    <p>Tacos, Burritos, Quesadillas</p>
-                </div>
-                <div class="cuisine-card">
-                    <div class="cuisine-emoji">🍛</div>
-                    <h4>Indian</h4>
-                    <p>Curry, Biryani, Tandoori</p>
-                </div>
-                <div class="cuisine-card">
-                    <div class="cuisine-emoji">🥗</div>
-                    <h4>Healthy</h4>
-                    <p>Salads, Bowls, Smoothies</p>
-                </div>
-                <div class="cuisine-card">
-                    <div class="cuisine-emoji">🍰</div>
-                    <h4>Desserts</h4>
-                    <p>Cakes, Ice Cream, Pastries</p>
-                </div>
-            </div>
-        </div>
-    </section>
+body {
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
 
-    <section id="order-management" class="order-management">
-        <div class="container-wide">
-            <div class="management-grid">
-                <div class="management-card">
-                    <div class="card-header">
-                        <h2>📝 Place New Order</h2>
-                        <p>Add orders from any restaurant - all cuisines welcome</p>
-                    </div>
-                    <form id="addOrderForm" class="modern-form">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="orderId">Order ID</label>
-                                <div class="autocomplete-wrapper">
-                                    <input type="text" id="orderId" placeholder="e.g., ORD001" required autocomplete="off">
-                                    <div class="autocomplete-suggestions" id="orderIdSuggestions"></div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="restaurantName">Restaurant Name</label>
-                                <div class="autocomplete-wrapper">
-                                    <input type="text" id="restaurantName" placeholder="e.g., Dragon Wok, Burger King" required autocomplete="off">
-                                    <div class="autocomplete-suggestions" id="restaurantSuggestions"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="itemCount">Number of Items</label>
-                                <input type="number" id="itemCount" min="1" placeholder="e.g., 3" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="deliveryDistance">Delivery Distance (KM)</label>
-                                <input type="number" id="deliveryDistance" step="0.1" min="0.1" placeholder="e.g., 5.5" required>
-                            </div>
-                        </div>
-                        <div class="form-group checkbox-modern">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="isPaid">
-                                <span class="checkbox-custom"></span>
-                                <span>Order is Already Paid</span>
-                            </label>
-                        </div>
-                        <button type="submit" class="btn-submit">
-                            <span>➕</span> Add Order
-                        </button>
-                    </form>
-                </div>
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow-sm);
+    z-index: 1000;
+    transition: var(--transition);
+}
 
-                <div class="management-card">
-                    <div class="card-header">
-                        <h2>🔍 Filter & Assign</h2>
-                        <p>Smart delivery assignment system</p>
-                    </div>
-                    <div class="filter-container">
-                        <div class="form-group">
-                            <label for="statusFilter">Filter by Payment Status</label>
-                            <select id="statusFilter">
-                                <option value="all">All Orders</option>
-                                <option value="paid">Paid Only</option>
-                                <option value="unpaid">Unpaid Only</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="distanceFilter">Maximum Distance (KM)</label>
-                            <input type="number" id="distanceFilter" step="0.1" min="0" placeholder="e.g., 10">
-                        </div>
-                        <div class="filter-buttons">
-                            <button type="button" class="btn-filter" onclick="applyFilters()">
-                                Apply Filters
-                            </button>
-                            <button type="button" class="btn-clear" onclick="clearFilters()">
-                                Clear
-                            </button>
-                        </div>
-                    </div>
+.nav-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
-                    <div class="assign-container">
-                        <h3>🚚 Assign Delivery</h3>
-                        <div class="form-group">
-                            <label for="maxDistanceAssign">Maximum Distance (KM)</label>
-                            <input type="number" id="maxDistanceAssign" step="0.1" min="0.1" placeholder="e.g., 10" required>
-                        </div>
-                        <button type="button" class="btn-assign" onclick="assignDelivery()">
-                            Assign Nearest Order
-                        </button>
-                    </div>
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
 
-                    <div id="assignmentResult" class="result-panel" style="display: none;">
-                        <div id="resultContent"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+.logo-icon {
+    font-size: 2rem;
+}
 
-    <section id="orders" class="orders-section">
-        <div class="container-wide">
-            <div class="section-header-flex">
-                <div>
-                    <h2 class="section-title">All Orders</h2>
-                    <p class="section-description">Manage and track all your food delivery orders</p>
-                </div>
-            </div>
+.logo-text {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
 
-            <div class="orders-table-container">
-                <table class="modern-table">
-                    <thead>
-                        <tr>
-                            <th>Order ID</th>
-                            <th>Restaurant</th>
-                            <th>Items</th>
-                            <th>Distance</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="ordersTableBody">
-                        <tr class="empty-state">
-                            <td colspan="6">
-                                <div class="empty-content">
-                                    <div class="empty-icon">🍽️</div>
-                                    <h3>No orders yet</h3>
-                                    <p>Start by adding your first food delivery order above!</p>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </section>
+.nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+}
 
-    <section id="contact" class="contact-section">
-        <div class="container-wide">
-            <div class="contact-grid">
-                <div class="contact-info">
-                    <h2>Get In Touch</h2>
-                    <p>Have questions about our food delivery management system? We're here to help with all your order tracking and delivery needs.</p>
-                    <div class="contact-details">
-                        <div class="contact-item">
-                            <div class="contact-icon">📍</div>
-                            <div>
-                                <h4>Address</h4>
-                                <p>123 Delivery Street, Food City, FC 12345</p>
-                            </div>
-                        </div>
-                        <div class="contact-item">
-                            <div class="contact-icon">📞</div>
-                            <div>
-                                <h4>Phone</h4>
-                                <p>1-800-FOOD-HUB</p>
-                            </div>
-                        </div>
-                        <div class="contact-item">
-                            <div class="contact-icon">🕒</div>
-                            <div>
-                                <h4>Hours</h4>
-                                <p>24/7 Delivery Service</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="contact-form-container">
-                    <h3>Send us a message</h3>
-                    <form class="contact-form">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <input type="text" placeholder="First Name" required>
-                            </div>
-                            <div class="form-group">
-                                <input type="text" placeholder="Last Name" required>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <input type="email" placeholder="Email Address" required>
-                        </div>
-                        <div class="form-group">
-                            <textarea placeholder="Your Message" rows="4" required></textarea>
-                        </div>
-                        <button type="submit" class="btn-contact">Send Message</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </section>
+.nav-links a {
+    text-decoration: none;
+    color: var(--text-primary);
+    font-weight: 500;
+    transition: var(--transition);
+    position: relative;
+}
 
-    <footer class="footer">
-        <div class="footer-content">
-            <div class="footer-grid">
-                <div class="footer-column">
-                    <div class="footer-logo">
-                        <span class="logo-icon">🍔</span>
-                        <span class="logo-text">FoodHub</span>
-                    </div>
-                    <p>The ultimate food delivery management system. Order from any restaurant, track in real-time, and enjoy fast delivery from all your favorite cuisines.</p>
-                </div>
-                <div class="footer-column">
-                    <h4>Quick Links</h4>
-                    <ul>
-                        <li><a href="#hero">Home</a></li>
-                        <li><a href="#features">Features</a></li>
-                        <li><a href="#orders">Orders</a></li>
-                        <li><a href="#contact">Contact</a></li>
-                    </ul>
-                </div>
-                <div class="footer-column">
-                    <h4>Cuisines</h4>
-                    <ul>
-                        <li>Italian & Pizza</li>
-                        <li>Chinese & Asian</li>
-                        <li>Burgers & Fast Food</li>
-                        <li>Indian & Curry</li>
-                        <li>Sushi & Japanese</li>
-                        <li>Mexican & More</li>
-                    </ul>
-                </div>
-                <div class="footer-column">
-                    <h4>Contact Info</h4>
-                    <ul>
-                        <li>📞 8126783617</li>
-                        <li>✉️ ajayyadav@outlook.com</li>
-                        <li>📍 Govinndpuram, Ghaziabad</li>
-                        <li>🕒 24/7 Service</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2024 FoodHub - Universal Food Delivery Manager. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
+.nav-links a:hover {
+    color: var(--primary-color);
+}
 
-    <div id="toast" class="toast"></div>
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--primary-color);
+    transition: width 0.3s;
+}
 
-    <script src="body.js"></script>
-</body>
-</html>
+.nav-links a:hover::after {
+    width: 100%;
+}
+
+.nav-cta {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: var(--shadow-md);
+}
+
+.nav-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding-top: 80px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.hero-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 20% 50%, rgba(255, 107, 53, 0.2) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(102, 126, 234, 0.2) 0%, transparent 50%);
+}
+
+.hero-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+}
+
+.hero-text {
+    color: white;
+}
+
+.hero-title {
+    font-size: 4rem;
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+    animation: fadeInUp 1s ease-out;
+}
+
+.hero-subtitle {
+    font-size: 1.25rem;
+    line-height: 1.8;
+    margin-bottom: 2rem;
+    opacity: 0.95;
+    animation: fadeInUp 1s ease-out 0.2s both;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 3rem;
+    animation: fadeInUp 1s ease-out 0.4s both;
+}
+
+.btn-hero {
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    font-family: inherit;
+}
+
+.btn-hero.primary {
+    background: white;
+    color: var(--primary-color);
+    box-shadow: var(--shadow-lg);
+}
+
+.btn-hero.primary:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-xl);
+}
+
+.btn-hero.secondary {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.btn-hero.secondary:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-3px);
+}
+
+.hero-stats {
+    display: flex;
+    gap: 2rem;
+    animation: fadeInUp 1s ease-out 0.6s both;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: white;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    opacity: 0.9;
+    color: white;
+}
+
+.hero-image {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 1s ease-out 0.8s both;
+}
+
+.hero-circle {
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    backdrop-filter: blur(20px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    animation: pulse 3s ease-in-out infinite;
+}
+
+.hero-illustration {
+    z-index: 1;
+    position: relative;
+    width: 500px;
+    height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.food-icons {
+    position: relative;
+    width: 400px;
+    height: 400px;
+}
+
+.food-icon {
+    position: absolute;
+    font-size: 5rem;
+    filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.2));
+    animation: float 3s ease-in-out infinite;
+}
+
+.food-icon:nth-child(1) {
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    animation-delay: 0s;
+}
+
+.food-icon:nth-child(2) {
+    top: 25%;
+    right: 0;
+    animation-delay: 0.5s;
+}
+
+.food-icon:nth-child(3) {
+    bottom: 25%;
+    right: 0;
+    animation-delay: 1s;
+}
+
+.food-icon:nth-child(4) {
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    animation-delay: 1.5s;
+}
+
+.food-icon:nth-child(5) {
+    bottom: 25%;
+    left: 0;
+    animation-delay: 2s;
+}
+
+.food-icon:nth-child(6) {
+    top: 25%;
+    left: 0;
+    animation-delay: 2.5s;
+}
+
+.features-section {
+    padding: var(--spacing-2xl) 2rem;
+    background: var(--bg-primary);
+}
+
+.section-header-center {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto 3rem;
+}
+
+.section-title {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+}
+
+.section-description {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    line-height: 1.8;
+}
+
+.features-grid {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+}
+
+.feature-card {
+    background: white;
+    padding: 2rem;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    transition: var(--transition);
+    text-align: center;
+}
+
+.feature-card:hover {
+    transform: translateY(-10px);
+    box-shadow: var(--shadow-xl);
+}
+
+.feature-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+}
+
+.feature-card h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+}
+
+.feature-card p {
+    color: var(--text-secondary);
+    line-height: 1.8;
+}
+
+.cuisines-section {
+    padding: var(--spacing-2xl) 2rem;
+    background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%);
+}
+
+.cuisines-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.cuisine-card {
+    background: white;
+    padding: 2rem 1.5rem;
+    border-radius: var(--radius-lg);
+    text-align: center;
+    transition: var(--transition);
+    box-shadow: var(--shadow-sm);
+    border: 2px solid transparent;
+}
+
+.cuisine-card:hover {
+    transform: translateY(-10px);
+    box-shadow: var(--shadow-xl);
+    border-color: var(--primary-color);
+}
+
+.cuisine-emoji {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    display: inline-block;
+    transition: var(--transition);
+}
+
+.cuisine-card:hover .cuisine-emoji {
+    transform: scale(1.2) rotate(10deg);
+}
+
+.cuisine-card h4 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.cuisine-card p {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.order-management {
+    padding: var(--spacing-2xl) 2rem;
+    background: var(--bg-secondary);
+}
+
+.container-wide {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.management-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+.management-card {
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    box-shadow: var(--shadow-md);
+    transition: var(--transition);
+}
+
+.management-card:hover {
+    box-shadow: var(--shadow-xl);
+}
+
+.card-header h2 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.card-header p {
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+}
+
+.modern-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    position: relative;
+}
+
+.autocomplete-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.autocomplete-suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 2px solid var(--primary-color);
+    border-top: none;
+    border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    box-shadow: var(--shadow-lg);
+    display: none;
+}
+
+.autocomplete-suggestions.show {
+    display: block;
+}
+
+.autocomplete-item {
+    padding: 0.75rem 0.875rem;
+    cursor: pointer;
+    transition: var(--transition);
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.95rem;
+}
+
+.autocomplete-item:last-child {
+    border-bottom: none;
+}
+
+.autocomplete-item:hover,
+.autocomplete-item.active {
+    background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(255, 107, 53, 0.05));
+    color: var(--primary-dark);
+}
+
+.autocomplete-item strong {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.autocomplete-empty {
+    padding: 0.75rem 0.875rem;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    font-style: italic;
+}
+
+.form-group label {
+    font-weight: 500;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+}
+
+.form-group input,
+.form-group select {
+    padding: 0.875rem;
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    font-size: 1rem;
+    font-family: inherit;
+    transition: var(--transition);
+    background: white;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+}
+
+.checkbox-modern {
+    margin: 0.5rem 0;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.checkbox-label input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: var(--primary-color);
+}
+
+.btn-submit {
+    padding: 1rem;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    box-shadow: var(--shadow-md);
+}
+
+.btn-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.filter-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    margin-bottom: 1.5rem;
+}
+
+.filter-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.btn-filter,
+.btn-clear {
+    padding: 0.75rem;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.btn-filter {
+    background: var(--secondary-color);
+    color: white;
+}
+
+.btn-filter:hover {
+    background: #0f172a;
+    transform: translateY(-2px);
+}
+
+.btn-clear {
+    background: white;
+    color: var(--text-primary);
+    border: 2px solid var(--border-color);
+}
+
+.btn-clear:hover {
+    border-color: var(--text-secondary);
+    transform: translateY(-2px);
+}
+
+.assign-container {
+    padding: 1.5rem;
+    background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+    border-radius: var(--radius-md);
+    border-left: 4px solid var(--success-color);
+}
+
+.assign-container h3 {
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+}
+
+.btn-assign {
+    width: 100%;
+    padding: 1rem;
+    background: var(--success-color);
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-assign:hover {
+    background: #059669;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.result-panel {
+    margin-top: 1.5rem;
+    padding: 1.5rem;
+    background: white;
+    border-radius: var(--radius-md);
+    border-left: 4px solid var(--primary-color);
+    box-shadow: var(--shadow-sm);
+    animation: slideDown 0.3s ease-out;
+}
+
+.result-panel.success {
+    background: #ecfdf5;
+    border-left-color: var(--success-color);
+}
+
+.result-panel.error {
+    background: #fef2f2;
+    border-left-color: var(--danger-color);
+}
+
+#resultContent {
+    color: var(--text-primary);
+    line-height: 1.8;
+}
+
+#resultContent p {
+    margin: 0.5rem 0;
+}
+
+#resultContent strong {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.orders-section {
+    padding: var(--spacing-2xl) 2rem;
+    background: var(--bg-primary);
+}
+
+.section-header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.orders-table-container {
+    background: white;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+}
+
+.modern-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.modern-table thead {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.modern-table th {
+    padding: 1.25rem;
+    text-align: left;
+    font-weight: 600;
+    color: white;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+.modern-table tbody tr {
+    border-bottom: 1px solid var(--border-color);
+    transition: var(--transition);
+}
+
+.modern-table tbody tr:hover {
+    background: var(--bg-secondary);
+}
+
+.modern-table td {
+    padding: 1.25rem;
+    color: var(--text-primary);
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.status-badge.paid {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.status-badge.unpaid {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.btn-danger {
+    background: var(--danger-color);
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.btn-danger:hover {
+    background: #dc2626;
+    transform: scale(1.05);
+}
+
+.empty-state td {
+    padding: 4rem !important;
+}
+
+.empty-content {
+    text-align: center;
+}
+
+.empty-icon {
+    font-size: 5rem;
+    margin-bottom: 1rem;
+    opacity: 0.3;
+}
+
+.empty-content h3 {
+    font-size: 1.5rem;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.empty-content p {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+}
+
+.contact-section {
+    padding: var(--spacing-2xl) 2rem;
+    background: var(--bg-secondary);
+}
+
+.contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+}
+
+.contact-info h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+}
+
+.contact-info > p {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+    line-height: 1.8;
+}
+
+.contact-details {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.contact-item {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+}
+
+.contact-icon {
+    font-size: 2rem;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+}
+
+.contact-item h4 {
+    font-size: 1.1rem;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+}
+
+.contact-item p {
+    color: var(--text-secondary);
+}
+
+.contact-form-container {
+    background: white;
+    padding: 2rem;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+}
+
+.contact-form-container h3 {
+    font-size: 1.5rem;
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+}
+
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.contact-form input,
+.contact-form textarea {
+    padding: 0.875rem;
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    font-size: 1rem;
+    font-family: inherit;
+    transition: var(--transition);
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+}
+
+.contact-form textarea {
+    resize: vertical;
+}
+
+.btn-contact {
+    padding: 1rem;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: var(--shadow-md);
+}
+
+.btn-contact:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.footer {
+    background: var(--bg-dark);
+    color: white;
+    padding: 3rem 2rem 1.5rem;
+}
+
+.footer-content {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 3rem;
+    margin-bottom: 2rem;
+}
+
+.footer-column h4 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    color: white;
+}
+
+.footer-column p {
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.8;
+}
+
+.footer-column ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.footer-column ul li {
+    color: rgba(255, 255, 255, 0.7);
+    transition: var(--transition);
+}
+
+.footer-column ul li a {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.footer-column ul li:hover,
+.footer-column ul li a:hover {
+    color: var(--primary-color);
+    padding-left: 5px;
+}
+
+.footer-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.footer-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 1.5rem;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.toast {
+    position: fixed;
+    top: 100px;
+    right: 20px;
+    padding: 1rem 1.5rem;
+    background: white;
+    color: var(--text-primary);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-xl);
+    display: none;
+    z-index: 2000;
+    min-width: 300px;
+    max-width: 500px;
+    animation: slideInRight 0.3s ease-out;
+    border-left: 4px solid var(--primary-color);
+}
+
+.toast.show {
+    display: block;
+}
+
+.toast.success {
+    border-left-color: var(--success-color);
+    background: #ecfdf5;
+}
+
+.toast.error {
+    border-left-color: var(--danger-color);
+    background: #fef2f2;
+}
+
+.toast.warning {
+    border-left-color: var(--warning-color);
+    background: #fef3c7;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(100px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.5;
+    }
+    50% {
+        transform: scale(1.05);
+        opacity: 0.7;
+    }
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+@media (max-width: 1024px) {
+    .hero-content {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+    
+    .hero-title {
+        font-size: 3rem;
+    }
+    
+    .hero-buttons {
+        justify-content: center;
+    }
+    
+    .hero-stats {
+        justify-content: center;
+    }
+    
+    .hero-image {
+        display: none;
+    }
+    
+    .management-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .contact-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .footer-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .nav-links {
+        display: none;
+    }
+    
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+    
+    .hero-buttons {
+        flex-direction: column;
+    }
+    
+    .btn-hero {
+        width: 100%;
+    }
+    
+    .section-title {
+        font-size: 2rem;
+    }
+    
+    .features-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .footer-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .modern-table {
+        font-size: 0.875rem;
+    }
+    
+    .modern-table th,
+    .modern-table td {
+        padding: 0.75rem 0.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-title {
+        font-size: 2rem;
+    }
+    
+    .stat-number {
+        font-size: 2rem;
+    }
+    
+    .food-icons {
+        width: 300px;
+        height: 300px;
+    }
+    
+    .food-icon {
+        font-size: 3rem;
+    }
+    
+    .cuisines-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .management-card,
+    .contact-form-container {
+        padding: 1.5rem;
+    }
+}
+
+*:focus-visible {
+    outline: 3px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}

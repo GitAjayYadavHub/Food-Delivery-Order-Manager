@@ -11,9 +11,254 @@ document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('addOrderForm');
     form.addEventListener('submit', handleAddOrder);
     
+    initializeAutocomplete();
+    
     renderOrders();
     updateStats();
 });
+
+function initializeAutocomplete() {
+    const orderIdInput = document.getElementById('orderId');
+    const restaurantInput = document.getElementById('restaurantName');
+    const orderIdSuggestions = document.getElementById('orderIdSuggestions');
+    const restaurantSuggestions = document.getElementById('restaurantSuggestions');
+    
+    let activeIndex = -1;
+    let currentSuggestions = [];
+    
+    orderIdInput.addEventListener('input', function(e) {
+        const value = e.target.value.trim();
+        if (value.length === 0) {
+            hideAutocomplete(orderIdSuggestions);
+            return;
+        }
+        
+        const suggestions = generateOrderIdSuggestions(value);
+        showAutocomplete(orderIdSuggestions, suggestions, orderIdInput);
+    });
+    
+    restaurantInput.addEventListener('input', function(e) {
+        const value = e.target.value.trim();
+        if (value.length === 0) {
+            hideAutocomplete(restaurantSuggestions);
+            return;
+        }
+        
+        const suggestions = getRestaurantSuggestions(value);
+        showAutocomplete(restaurantSuggestions, suggestions, restaurantInput);
+    });
+    
+    orderIdInput.addEventListener('blur', function() {
+        setTimeout(() => hideAutocomplete(orderIdSuggestions), 200);
+    });
+    
+    restaurantInput.addEventListener('blur', function() {
+        setTimeout(() => hideAutocomplete(restaurantSuggestions), 200);
+    });
+    
+    orderIdInput.addEventListener('keydown', function(e) {
+        handleKeyNavigation(e, orderIdSuggestions, orderIdInput);
+    });
+    
+    restaurantInput.addEventListener('keydown', function(e) {
+        handleKeyNavigation(e, restaurantSuggestions, restaurantInput);
+    });
+    
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.autocomplete-wrapper')) {
+            hideAutocomplete(orderIdSuggestions);
+            hideAutocomplete(restaurantSuggestions);
+        }
+    });
+}
+
+function generateOrderIdSuggestions(input) {
+    const suggestions = [];
+    
+    const existingIds = orders.map(order => order.orderId);
+    
+    const patterns = [
+        `ORD${input.replace(/\D/g, '')}`,
+        `ORDER${input.replace(/\D/g, '')}`,
+        `${input.toUpperCase()}`,
+    ];
+    
+    patterns.forEach(pattern => {
+        if (pattern.length >= 3 && !existingIds.includes(pattern)) {
+            suggestions.push({
+                text: pattern,
+                type: 'suggestion',
+                highlight: input.toUpperCase()
+            });
+        }
+    });
+    
+    if (input.length >= 3) {
+        const nextNumber = Math.max(0, ...orders.map(o => {
+            const match = o.orderId.match(/\d+/);
+            return match ? parseInt(match[0]) : 0;
+        })) + 1;
+        
+        const autoSuggestion = `ORD${String(nextNumber).padStart(3, '0')}`;
+        if (!existingIds.includes(autoSuggestion)) {
+            suggestions.unshift({
+                text: autoSuggestion,
+                type: 'auto',
+                highlight: input.toUpperCase()
+            });
+        }
+    }
+    
+    return suggestions.slice(0, 5);
+}
+
+function getRestaurantSuggestions(input) {
+    const suggestions = [];
+    const lowerInput = input.toLowerCase();
+    
+    const restaurants = [
+        { name: 'Dragon Wok', cuisine: 'Chinese' },
+        { name: 'Burger Bros', cuisine: 'American' },
+        { name: 'Tokyo Sushi Bar', cuisine: 'Japanese' },
+        { name: 'Spice Palace', cuisine: 'Indian' },
+        { name: 'Mama Mia Pizza', cuisine: 'Italian' },
+        { name: 'Taco Loco', cuisine: 'Mexican' },
+        { name: 'Burger King', cuisine: 'Fast Food' },
+        { name: 'Pizza Hut', cuisine: 'Italian' },
+        { name: 'KFC', cuisine: 'Fast Food' },
+        { name: 'Subway', cuisine: 'Fast Food' },
+        { name: 'Dominos Pizza', cuisine: 'Italian' },
+        { name: 'Thai Express', cuisine: 'Thai' },
+        { name: 'Panda Express', cuisine: 'Chinese' },
+        { name: 'Olive Garden', cuisine: 'Italian' },
+        { name: 'Chipotle', cuisine: 'Mexican' },
+        { name: 'Noodle House', cuisine: 'Asian' },
+        { name: 'Steak House', cuisine: 'American' },
+        { name: 'Curry Palace', cuisine: 'Indian' },
+        { name: 'Sushi Master', cuisine: 'Japanese' },
+        { name: 'Taco Bell', cuisine: 'Mexican' }
+    ];
+    
+    const uniqueExisting = [...new Set(orders.map(o => o.restaurantName))];
+    uniqueExisting.forEach(name => {
+        if (name.toLowerCase().includes(lowerInput)) {
+            suggestions.push({
+                text: name,
+                type: 'existing',
+                highlight: input
+            });
+        }
+    });
+    
+    restaurants.forEach(restaurant => {
+        if (restaurant.name.toLowerCase().includes(lowerInput) && 
+            !suggestions.some(s => s.text === restaurant.name)) {
+            suggestions.push({
+                text: restaurant.name,
+                type: 'popular',
+                cuisine: restaurant.cuisine,
+                highlight: input
+            });
+        }
+    });
+    
+    return suggestions.slice(0, 6);
+}
+
+function showAutocomplete(container, suggestions, inputElement) {
+    if (suggestions.length === 0) {
+        container.innerHTML = '<div class="autocomplete-empty">No suggestions available</div>';
+        container.classList.add('show');
+        return;
+    }
+    
+    container.innerHTML = '';
+    
+    suggestions.forEach((suggestion, index) => {
+        const item = document.createElement('div');
+        item.className = 'autocomplete-item';
+        
+        const highlightedText = highlightMatch(suggestion.text, suggestion.highlight);
+        
+        if (suggestion.type === 'auto') {
+            item.innerHTML = `<strong>💡 ${highlightedText}</strong> <span style="color: #7f8c8d; font-size: 0.85rem;">(Auto-generated)</span>`;
+        } else if (suggestion.type === 'existing') {
+            item.innerHTML = `<strong>🔄 ${highlightedText}</strong> <span style="color: #7f8c8d; font-size: 0.85rem;">(Recent)</span>`;
+        } else if (suggestion.type === 'popular') {
+            item.innerHTML = `🍽️ ${highlightedText} <span style="color: #95a5a6; font-size: 0.85rem;">(${suggestion.cuisine})</span>`;
+        } else {
+            item.innerHTML = highlightedText;
+        }
+        
+        item.addEventListener('click', function() {
+            inputElement.value = suggestion.text;
+            hideAutocomplete(container);
+            inputElement.focus();
+        });
+        
+        container.appendChild(item);
+    });
+    
+    container.classList.add('show');
+}
+
+function hideAutocomplete(container) {
+    container.classList.remove('show');
+    container.innerHTML = '';
+}
+
+function highlightMatch(text, query) {
+    if (!query) return text;
+    
+    const regex = new RegExp(`(${escapeRegex(query)})`, 'gi');
+    return text.replace(regex, '<strong>$1</strong>');
+}
+
+function escapeRegex(string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function handleKeyNavigation(e, container, inputElement) {
+    const items = container.querySelectorAll('.autocomplete-item');
+    if (items.length === 0) return;
+    
+    let activeItem = container.querySelector('.autocomplete-item.active');
+    let activeIndex = Array.from(items).indexOf(activeItem);
+    
+    if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        if (activeIndex < items.length - 1) {
+            activeIndex++;
+        } else {
+            activeIndex = 0;
+        }
+        updateActiveItem(items, activeIndex);
+    } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (activeIndex > 0) {
+            activeIndex--;
+        } else {
+            activeIndex = items.length - 1;
+        }
+        updateActiveItem(items, activeIndex);
+    } else if (e.key === 'Enter' && activeIndex >= 0) {
+        e.preventDefault();
+        items[activeIndex].click();
+    } else if (e.key === 'Escape') {
+        hideAutocomplete(container);
+    }
+}
+
+function updateActiveItem(items, activeIndex) {
+    items.forEach((item, index) => {
+        if (index === activeIndex) {
+            item.classList.add('active');
+            item.scrollIntoView({ block: 'nearest' });
+        } else {
+            item.classList.remove('active');
+        }
+    });
+}
 
 function handleAddOrder(event) {
     event.preventDefault();

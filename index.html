@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FoodHub - Food Delivery Manager</title>
+    <title>FoodFleet - Food Delivery Manager</title>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,7 +14,7 @@
         <div class="nav-container">
             <div class="logo">
                 <span class="logo-icon">🍔</span>
-                <span class="logo-text">FoodHub</span>
+                <span class="logo-text">FoodFleet</span>
             </div>
             <ul class="nav-links">
                 <li><a href="#hero">Home</a></li>
@@ -163,11 +163,17 @@
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="orderId">Order ID</label>
-                                <input type="text" id="orderId" placeholder="e.g., ORD001" required>
+                                <div class="autocomplete-wrapper">
+                                    <input type="text" id="orderId" placeholder="e.g., ORD001" required autocomplete="off">
+                                    <div class="autocomplete-suggestions" id="orderIdSuggestions"></div>
+                                </div>
                             </div>
                             <div class="form-group">
                                 <label for="restaurantName">Restaurant Name</label>
-                                <input type="text" id="restaurantName" placeholder="e.g., Dragon Wok, Burger King" required>
+                                <div class="autocomplete-wrapper">
+                                    <input type="text" id="restaurantName" placeholder="e.g., Dragon Wok, Burger King" required autocomplete="off">
+                                    <div class="autocomplete-suggestions" id="restaurantSuggestions"></div>
+                                </div>
                             </div>
                         </div>
                         <div class="form-row">
@@ -288,14 +294,14 @@
                             <div class="contact-icon">📍</div>
                             <div>
                                 <h4>Address</h4>
-                                <p>123 Delivery Street, Food City, FC 12345</p>
+                                <p>142 Govindpuram, Ghaziabad, U.P 201013</p>
                             </div>
                         </div>
                         <div class="contact-item">
                             <div class="contact-icon">📞</div>
                             <div>
                                 <h4>Phone</h4>
-                                <p>1-800-FOOD-HUB</p>
+                                <p>8126783617</p>
                             </div>
                         </div>
                         <div class="contact-item">
@@ -337,7 +343,7 @@
                 <div class="footer-column">
                     <div class="footer-logo">
                         <span class="logo-icon">🍔</span>
-                        <span class="logo-text">FoodHub</span>
+                        <span class="logo-text">FoodFleet</span>
                     </div>
                     <p>The ultimate food delivery management system. Order from any restaurant, track in real-time, and enjoy fast delivery from all your favorite cuisines.</p>
                 </div>
@@ -364,15 +370,15 @@
                 <div class="footer-column">
                     <h4>Contact Info</h4>
                     <ul>
-                        <li>📞 1-800-FOOD-HUB</li>
-                        <li>✉️ support@foodhub.com</li>
-                        <li>📍 123 Delivery Street</li>
+                        <li>📞 8126783617</li>
+                        <li>✉️ ajayyadav3617@outlook.com</li>
+                        <li>📍 142 Govindpuram, Ghaziabad, U.P 201013</li>
                         <li>🕒 24/7 Service</li>
                     </ul>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2026 FoodHub - Food Delivery Manager. All rights reserved.</p>
+                <p>&copy; 2026 FoodFleet - Food Delivery Manager. All rights reserved.</p>
             </div>
         </div>
     </footer>

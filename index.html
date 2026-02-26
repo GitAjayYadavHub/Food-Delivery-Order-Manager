@@ -31,7 +31,7 @@
         <div class="hero-content">
             <div class="hero-text">
                 <h1 class="hero-title">Your Favorite Food, Delivered Fast</h1>
-                <p class="hero-subtitle">From Pizza to Sushi, Burgers to Biryani - Order from thousands of restaurants. Smart delivery management with real-time tracking and intelligent order assignment.</p>
+                <p class="hero-subtitle">From Pizza to Sushi, Burgers to Biryani - Order from thousands of restaurants. Smart delivery management with real-time tracking and intelligent order assignment. Available 24/7!</p>
                 <div class="hero-buttons">
                     <button class="btn-hero primary" onclick="document.getElementById('addOrderForm').scrollIntoView({behavior: 'smooth'})">
                         Order Now
@@ -73,7 +73,7 @@
 
     <section id="features" class="features-section">
         <div class="section-header-center">
-            <h2 class="section-title">Why Choose FoodHub</h2>
+            <h2 class="section-title">Why Choose FoodFleet</h2>
             <p class="section-description">Advanced delivery management system that handles orders from all your favorite restaurants</p>
         </div>
         <div class="features-grid">
@@ -100,56 +100,136 @@
         </div>
     </section>
 
-    <section class="cuisines-section">
+    <section class="cuisines-section" id="cuisines">
         <div class="container-wide">
             <div class="section-header-center">
                 <h2 class="section-title">Popular Cuisines We Deliver</h2>
-                <p class="section-description">Order from your favorite restaurants across all cuisine types</p>
+                <p class="section-description">Browse restaurants by cuisine type - Click to explore menu items</p>
             </div>
             <div class="cuisines-grid">
-                <div class="cuisine-card">
-                    <div class="cuisine-emoji">🍕</div>
-                    <h4>Italian</h4>
-                    <p>Pizza, Pasta, Risotto</p>
+                <div class="cuisine-card interactive" data-cuisine="italian" onclick="showCuisineDetails('italian')">
+                    <div class="cuisine-icon-wrapper">
+                        <img src="https://cdn-icons-png.flaticon.com/128/3480/3480618.png" alt="Italian Pizza" class="cuisine-icon">
+                    </div>
+                    <h4>Italian & Pizza</h4>
+                    <div class="cuisine-items">
+                        <span class="food-tag">🍕 Pizza</span>
+                        <span class="food-tag">🍝 Pasta</span>
+                        <span class="food-tag">🥗 Risotto</span>
+                        <span class="food-tag">🧀 Lasagna</span>
+                        <span class="food-tag">🥖 Bruschetta</span>
+                    </div>
+                    <p class="cuisine-count">15+ Restaurants</p>
                 </div>
-                <div class="cuisine-card">
-                    <div class="cuisine-emoji">🍔</div>
-                    <h4>American</h4>
-                    <p>Burgers, Fries, Wings</p>
+                <div class="cuisine-card interactive" data-cuisine="american" onclick="showCuisineDetails('american')">
+                    <div class="cuisine-icon-wrapper">
+                        <img src="https://cdn-icons-png.flaticon.com/128/4727/4727424.png" alt="American Burger" class="cuisine-icon">
+                    </div>
+                    <h4>Burgers & Fast Food</h4>
+                    <div class="cuisine-items">
+                        <span class="food-tag">🍔 Burgers</span>
+                        <span class="food-tag">🍟 Fries</span>
+                        <span class="food-tag">🍗 Wings</span>
+                        <span class="food-tag">🌭 Hot Dogs</span>
+                        <span class="food-tag">🥤 Shakes</span>
+                    </div>
+                    <p class="cuisine-count">20+ Restaurants</p>
                 </div>
-                <div class="cuisine-card">
-                    <div class="cuisine-emoji">🍜</div>
-                    <h4>Chinese</h4>
-                    <p>Noodles, Fried Rice, Dim Sum</p>
+                <div class="cuisine-card interactive" data-cuisine="chinese" onclick="showCuisineDetails('chinese')">
+                    <div class="cuisine-icon-wrapper">
+                        <img src="https://cdn-icons-png.flaticon.com/128/2515/2515268.png" alt="Chinese Noodles" class="cuisine-icon">
+                    </div>
+                    <h4>Chinese & Asian</h4>
+                    <div class="cuisine-items">
+                        <span class="food-tag">🍜 Noodles</span>
+                        <span class="food-tag">🍚 Fried Rice</span>
+                        <span class="food-tag">🥟 Dim Sum</span>
+                        <span class="food-tag">🥠 Dumplings</span>
+                        <span class="food-tag">🍲 Wonton Soup</span>
+                    </div>
+                    <p class="cuisine-count">12+ Restaurants</p>
                 </div>
-                <div class="cuisine-card">
-                    <div class="cuisine-emoji">🍣</div>
-                    <h4>Japanese</h4>
-                    <p>Sushi, Ramen, Tempura</p>
+                <div class="cuisine-card interactive" data-cuisine="japanese" onclick="showCuisineDetails('japanese')">
+                    <div class="cuisine-icon-wrapper">
+                        <img src="https://cdn-icons-png.flaticon.com/128/2252/2252060.png" alt="Japanese Sushi" class="cuisine-icon">
+                    </div>
+                    <h4>Sushi & Japanese</h4>
+                    <div class="cuisine-items">
+                        <span class="food-tag">🍣 Sushi</span>
+                        <span class="food-tag">🍱 Bento</span>
+                        <span class="food-tag">🍜 Ramen</span>
+                        <span class="food-tag">🍤 Tempura</span>
+                        <span class="food-tag">🥢 Teriyaki</span>
+                    </div>
+                    <p class="cuisine-count">10+ Restaurants</p>
                 </div>
-                <div class="cuisine-card">
-                    <div class="cuisine-emoji">🌮</div>
-                    <h4>Mexican</h4>
-                    <p>Tacos, Burritos, Quesadillas</p>
+                <div class="cuisine-card interactive" data-cuisine="mexican" onclick="showCuisineDetails('mexican')">
+                    <div class="cuisine-icon-wrapper">
+                        <img src="https://cdn-icons-png.flaticon.com/128/2921/2921822.png" alt="Mexican Taco" class="cuisine-icon">
+                    </div>
+                    <h4>Mexican & More</h4>
+                    <div class="cuisine-items">
+                        <span class="food-tag">🌮 Tacos</span>
+                        <span class="food-tag">🌯 Burritos</span>
+                        <span class="food-tag">🫔 Quesadillas</span>
+                        <span class="food-tag">🥑 Guacamole</span>
+                        <span class="food-tag">🌶️ Nachos</span>
+                    </div>
+                    <p class="cuisine-count">8+ Restaurants</p>
                 </div>
-                <div class="cuisine-card">
-                    <div class="cuisine-emoji">🍛</div>
-                    <h4>Indian</h4>
-                    <p>Curry, Biryani, Tandoori</p>
+                <div class="cuisine-card interactive" data-cuisine="indian" onclick="showCuisineDetails('indian')">
+                    <div class="cuisine-icon-wrapper">
+                        <img src="https://cdn-icons-png.flaticon.com/128/2422/2422678.png" alt="Indian Curry" class="cuisine-icon">
+                    </div>
+                    <h4>Indian & Curry</h4>
+                    <div class="cuisine-items">
+                        <span class="food-tag">🍛 Curry</span>
+                        <span class="food-tag">🍚 Biryani</span>
+                        <span class="food-tag">🫓 Naan</span>
+                        <span class="food-tag">🥘 Tandoori</span>
+                        <span class="food-tag">🥙 Samosas</span>
+                    </div>
+                    <p class="cuisine-count">14+ Restaurants</p>
                 </div>
-                <div class="cuisine-card">
-                    <div class="cuisine-emoji">🥗</div>
-                    <h4>Healthy</h4>
-                    <p>Salads, Bowls, Smoothies</p>
+                <div class="cuisine-card interactive" data-cuisine="healthy" onclick="showCuisineDetails('healthy')">
+                    <div class="cuisine-icon-wrapper">
+                        <img src="https://cdn-icons-png.flaticon.com/128/3143/3143609.png" alt="Healthy Salad" class="cuisine-icon">
+                    </div>
+                    <h4>Healthy & Fresh</h4>
+                    <div class="cuisine-items">
+                        <span class="food-tag">🥗 Salads</span>
+                        <span class="food-tag">🥙 Wraps</span>
+                        <span class="food-tag">🥤 Smoothies</span>
+                        <span class="food-tag">🥑 Bowls</span>
+                        <span class="food-tag">🍇 Fresh Juice</span>
+                    </div>
+                    <p class="cuisine-count">9+ Restaurants</p>
                 </div>
-                <div class="cuisine-card">
-                    <div class="cuisine-emoji">🍰</div>
-                    <h4>Desserts</h4>
-                    <p>Cakes, Ice Cream, Pastries</p>
+                <div class="cuisine-card interactive" data-cuisine="desserts" onclick="showCuisineDetails('desserts')">
+                    <div class="cuisine-icon-wrapper">
+                        <img src="https://cdn-icons-png.flaticon.com/128/3081/3081986.png" alt="Desserts Cake" class="cuisine-icon">
+                    </div>
+                    <h4>Desserts & Sweets</h4>
+                    <div class="cuisine-items">
+                        <span class="food-tag">🍰 Cakes</span>
+                        <span class="food-tag">🍦 Ice Cream</span>
+                        <span class="food-tag">🥧 Pastries</span>
+                        <span class="food-tag">🍪 Cookies</span>
+                        <span class="food-tag">🧁 Cupcakes</span>
+                    </div>
+                    <p class="cuisine-count">11+ Restaurants</p>
                 </div>
             </div>
         </div>
     </section>
+
+    <div id="cuisineModal" class="cuisine-modal">
+        <div class="modal-overlay" onclick="closeCuisineModal()"></div>
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeCuisineModal()">&times;</button>
+            <div id="cuisineModalContent"></div>
+        </div>
+    </div>
 
     <section id="order-management" class="order-management">
         <div class="container-wide">
@@ -301,14 +381,21 @@
                             <div class="contact-icon">📞</div>
                             <div>
                                 <h4>Phone</h4>
-                                <p>8126783617</p>
+                                <p>+91 8126783617</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon">📧</div>
+                            <div>
+                                <h4>Email</h4>
+                                <p>ajayyadav3617@outlook.com</p>
                             </div>
                         </div>
                         <div class="contact-item">
                             <div class="contact-icon">🕒</div>
                             <div>
-                                <h4>Hours</h4>
-                                <p>24/7 Delivery Service</p>
+                                <h4>Service Hours</h4>
+                                <p>24/7 Service Available</p>
                             </div>
                         </div>
                     </div>
@@ -345,7 +432,7 @@
                         <span class="logo-icon">🍔</span>
                         <span class="logo-text">FoodFleet</span>
                     </div>
-                    <p>The ultimate food delivery management system. Order from any restaurant, track in real-time, and enjoy fast delivery from all your favorite cuisines.</p>
+                    <p>Your trusted food delivery partner. Smart order management with real-time tracking and intelligent delivery assignment. Available 24/7 for your convenience.</p>
                 </div>
                 <div class="footer-column">
                     <h4>Quick Links</h4>
@@ -370,15 +457,15 @@
                 <div class="footer-column">
                     <h4>Contact Info</h4>
                     <ul>
-                        <li>📞 8126783617</li>
+                        <li>📞 +91 8126783617</li>
                         <li>✉️ ajayyadav3617@outlook.com</li>
                         <li>📍 142 Govindpuram, Ghaziabad, U.P 201013</li>
-                        <li>🕒 24/7 Service</li>
+                        <li>🕒 24/7 Service Available</li>
                     </ul>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2026 FoodFleet - Food Delivery Manager. All rights reserved.</p>
+                <p>&copy; 2026 FoodFleet - Food Delivery Manager. All rights reserved. | Developed by Ajay Yadav</p>
             </div>
         </div>
     </footer>

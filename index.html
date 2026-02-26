@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Delivery Order Manager</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🍕 Food Delivery Order Manager</h1>
+            <p class="subtitle">Manage orders and assign deliveries efficiently</p>
+        </header>
+
+        <div class="main-content">
+            <section class="card add-order-section">
+                <h2>📝 Add New Order</h2>
+                <form id="addOrderForm">
+                    <div class="form-group">
+                        <label for="orderId">Order ID *</label>
+                        <input type="text" id="orderId" placeholder="e.g., ORD001" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="restaurantName">Restaurant Name *</label>
+                        <input type="text" id="restaurantName" placeholder="e.g., Pizza Palace" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="itemCount">Number of Items *</label>
+                        <input type="number" id="itemCount" min="1" placeholder="e.g., 3" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="deliveryDistance">Delivery Distance (KM) *</label>
+                        <input type="number" id="deliveryDistance" step="0.1" min="0.1" placeholder="e.g., 5.5" required>
+                    </div>
+                    <div class="form-group checkbox-group">
+                        <label>
+                            <input type="checkbox" id="isPaid">
+                            <span>Order is Paid</span>
+                        </label>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <span>➕</span> Add Order
+                    </button>
+                </form>
+            </section>
+
+            <section class="card filter-section">
+                <h2>🔍 Filter & Assign Delivery</h2>
+                
+                <div class="filter-controls">
+                    <div class="form-group">
+                        <label for="statusFilter">Filter by Payment Status</label>
+                        <select id="statusFilter">
+                            <option value="all">All Orders</option>
+                            <option value="paid">Paid Only</option>
+                            <option value="unpaid">Unpaid Only</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="distanceFilter">Maximum Distance (KM)</label>
+                        <input type="number" id="distanceFilter" step="0.1" min="0" placeholder="e.g., 10">
+                    </div>
+                    <button type="button" class="btn btn-secondary" onclick="applyFilters()">
+                        <span>🔍</span> Apply Filters
+                    </button>
+                    <button type="button" class="btn btn-outline" onclick="clearFilters()">
+                        <span>🔄</span> Clear Filters
+                    </button>
+                </div>
+
+                <div class="assign-controls">
+                    <h3>🚚 Assign Delivery</h3>
+                    <div class="form-group">
+                        <label for="maxDistanceAssign">Maximum Distance for Assignment (KM) *</label>
+                        <input type="number" id="maxDistanceAssign" step="0.1" min="0.1" placeholder="e.g., 10" required>
+                    </div>
+                    <button type="button" class="btn btn-success" onclick="assignDelivery()">
+                        <span>✅</span> Assign Nearest Unpaid Order
+                    </button>
+                </div>
+
+                <div id="assignmentResult" class="result-panel" style="display: none;">
+                    <h4>Assignment Result:</h4>
+                    <div id="resultContent"></div>
+                </div>
+            </section>
+        </div>
+
+        <section class="card orders-section">
+            <div class="section-header">
+                <h2>📋 All Orders</h2>
+                <div class="stats">
+                    <span class="stat-badge">Total: <strong id="totalOrders">0</strong></span>
+                    <span class="stat-badge stat-paid">Paid: <strong id="paidOrders">0</strong></span>
+                    <span class="stat-badge stat-unpaid">Unpaid: <strong id="unpaidOrders">0</strong></span>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table id="ordersTable">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Restaurant Name</th>
+                            <th>Items</th>
+                            <th>Distance (KM)</th>
+                            <th>Payment Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersTableBody">
+                        <tr class="empty-state">
+                            <td colspan="6">
+                                <div class="empty-message">
+                                    <span class="empty-icon">📦</span>
+                                    <p>No orders yet. Add your first order above!</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <div id="toast" class="toast"></div>
+
+        <footer>
+            <p>© 2024 Food Delivery Order Manager | Built with ❤️</p>
+        </footer>
+    </div>
+
+    <script src="body.js"></script>
+</body>
+</html>

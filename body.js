@@ -372,38 +372,45 @@ function loadDemoData() {
         orders = [
             {
                 orderId: 'ORD001',
-                restaurantName: 'Pizza Paradise',
+                restaurantName: 'Dragon Wok (Chinese)',
                 itemCount: 3,
                 isPaid: false,
                 deliveryDistance: 2.5
             },
             {
                 orderId: 'ORD002',
-                restaurantName: 'Burger Kingdom',
+                restaurantName: 'Burger Bros',
                 itemCount: 2,
                 isPaid: true,
                 deliveryDistance: 5.2
             },
             {
                 orderId: 'ORD003',
-                restaurantName: 'Sushi Central',
+                restaurantName: 'Tokyo Sushi Bar',
                 itemCount: 5,
                 isPaid: false,
                 deliveryDistance: 1.8
             },
             {
                 orderId: 'ORD004',
-                restaurantName: 'Taco Fiesta',
+                restaurantName: 'Spice Palace (Indian)',
                 itemCount: 4,
                 isPaid: false,
                 deliveryDistance: 7.3
             },
             {
                 orderId: 'ORD005',
-                restaurantName: 'Pasta House',
+                restaurantName: 'Mama Mia Pizza',
                 itemCount: 2,
                 isPaid: true,
                 deliveryDistance: 3.1
+            },
+            {
+                orderId: 'ORD006',
+                restaurantName: 'Taco Loco (Mexican)',
+                itemCount: 3,
+                isPaid: false,
+                deliveryDistance: 4.2
             }
         ];
         saveOrdersToStorage();
@@ -422,5 +429,5 @@ document.addEventListener('keydown', function(event) {
     }
 });
 
-console.log('%c🍕 Food Delivery Order Manager Loaded Successfully!', 'color: #ff6b35; font-size: 16px; font-weight: bold;');
-console.log('%cTip: Use loadDemoData() in console to load sample orders', 'color: #004e89; font-size: 12px;');
+console.log('%c🍔 FoodHub - Universal Food Delivery Manager Loaded Successfully!', 'color: #ff6b35; font-size: 16px; font-weight: bold;');
+console.log('%cTip: Use loadDemoData() in console to load sample orders from various cuisines', 'color: #1e293b; font-size: 12px;');

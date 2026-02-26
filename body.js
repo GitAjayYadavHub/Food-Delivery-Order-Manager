@@ -501,9 +501,10 @@ function renderOrders() {
         tableBody.innerHTML = `
             <tr class="empty-state">
                 <td colspan="6">
-                    <div class="empty-message">
+                    <div class="empty-content">
                         <span class="empty-icon">📦</span>
-                        <p>${orders.length === 0 ? 'No orders yet. Add your first order above!' : 'No orders match the current filters.'}</p>
+                        <h3>${orders.length === 0 ? 'No orders yet' : 'No matching orders'}</h3>
+                        <p>${orders.length === 0 ? 'Add your first order above!' : 'No orders match the current filters.'}</p>
                     </div>
                 </td>
             </tr>
@@ -674,5 +675,224 @@ document.addEventListener('keydown', function(event) {
     }
 });
 
-console.log('%c🍔 FoodHub - Universal Food Delivery Manager Loaded Successfully!', 'color: #ff6b35; font-size: 16px; font-weight: bold;');
+const cuisineData = {
+    italian: {
+        name: 'Italian & Pizza',
+        icon: 'https://cdn-icons-png.flaticon.com/128/3480/3480618.png',
+        description: 'Authentic Italian cuisine from traditional pizzerias and pasta houses',
+        restaurants: [
+            { name: 'Mama Mia Pizza', rating: 4.5, delivery: '25-35 min', distance: 2.3 },
+            { name: 'Pizza Hut', rating: 4.2, delivery: '30-40 min', distance: 3.1 },
+            { name: 'Dominos Pizza', rating: 4.3, delivery: '20-30 min', distance: 1.8 },
+            { name: 'Olive Garden', rating: 4.6, delivery: '35-45 min', distance: 4.2 },
+            { name: 'La Trattoria', rating: 4.7, delivery: '40-50 min', distance: 5.5 }
+        ],
+        items: ['Margherita Pizza', 'Pepperoni Pizza', 'Spaghetti Carbonara', 'Fettuccine Alfredo', 'Lasagna', 'Risotto', 'Bruschetta', 'Tiramisu']
+    },
+    american: {
+        name: 'Burgers & Fast Food',
+        icon: 'https://cdn-icons-png.flaticon.com/128/4727/4727424.png',
+        description: 'Classic American favorites - burgers, fries, wings and more',
+        restaurants: [
+            { name: 'Burger King', rating: 4.1, delivery: '20-30 min', distance: 1.5 },
+            { name: 'Burger Bros', rating: 4.4, delivery: '25-35 min', distance: 2.8 },
+            { name: 'Five Guys', rating: 4.6, delivery: '30-40 min', distance: 3.5 },
+            { name: 'Shake Shack', rating: 4.5, delivery: '25-35 min', distance: 2.1 },
+            { name: 'In-N-Out', rating: 4.8, delivery: '35-45 min', distance: 4.8 }
+        ],
+        items: ['Classic Burger', 'Cheeseburger', 'Bacon Burger', 'French Fries', 'Chicken Wings', 'Hot Dogs', 'Milkshakes', 'Onion Rings']
+    },
+    chinese: {
+        name: 'Chinese & Asian',
+        icon: 'https://cdn-icons-png.flaticon.com/128/2515/2515268.png',
+        description: 'Delicious Chinese cuisine with noodles, rice dishes and dim sum',
+        restaurants: [
+            { name: 'Dragon Wok', rating: 4.3, delivery: '30-40 min', distance: 2.5 },
+            { name: 'Panda Express', rating: 4.0, delivery: '20-30 min', distance: 1.9 },
+            { name: 'China Bistro', rating: 4.5, delivery: '35-45 min', distance: 3.7 },
+            { name: 'Wok Palace', rating: 4.4, delivery: '30-40 min', distance: 2.9 },
+            { name: 'Lucky Dragon', rating: 4.6, delivery: '40-50 min', distance: 5.2 }
+        ],
+        items: ['Chow Mein', 'Fried Rice', 'Sweet & Sour Chicken', 'Kung Pao Chicken', 'Dim Sum', 'Spring Rolls', 'Wonton Soup', 'Dumplings']
+    },
+    japanese: {
+        name: 'Sushi & Japanese',
+        icon: 'https://cdn-icons-png.flaticon.com/128/2252/2252060.png',
+        description: 'Fresh sushi, ramen and authentic Japanese dishes',
+        restaurants: [
+            { name: 'Tokyo Sushi Bar', rating: 4.7, delivery: '35-45 min', distance: 3.2 },
+            { name: 'Sushi Master', rating: 4.8, delivery: '40-50 min', distance: 4.5 },
+            { name: 'Ramen House', rating: 4.5, delivery: '30-40 min', distance: 2.7 },
+            { name: 'Sakura Japanese', rating: 4.6, delivery: '35-45 min', distance: 3.8 },
+            { name: 'Zen Sushi', rating: 4.4, delivery: '25-35 min', distance: 2.2 }
+        ],
+        items: ['California Roll', 'Salmon Sashimi', 'Tuna Nigiri', 'Ramen Bowl', 'Teriyaki Chicken', 'Tempura', 'Bento Box', 'Miso Soup']
+    },
+    mexican: {
+        name: 'Mexican & More',
+        icon: 'https://cdn-icons-png.flaticon.com/128/2921/2921822.png',
+        description: 'Spicy and flavorful Mexican cuisine with tacos, burritos and more',
+        restaurants: [
+            { name: 'Taco Loco', rating: 4.4, delivery: '25-35 min', distance: 2.4 },
+            { name: 'Chipotle', rating: 4.2, delivery: '20-30 min', distance: 1.7 },
+            { name: 'Taco Bell', rating: 4.0, delivery: '15-25 min', distance: 1.2 },
+            { name: 'El Mariachi', rating: 4.6, delivery: '35-45 min', distance: 4.1 },
+            { name: 'Casa Mexico', rating: 4.5, delivery: '30-40 min', distance: 3.3 }
+        ],
+        items: ['Beef Tacos', 'Chicken Burrito', 'Quesadillas', 'Nachos Supreme', 'Guacamole', 'Enchiladas', 'Fajitas', 'Churros']
+    },
+    indian: {
+        name: 'Indian & Curry',
+        icon: 'https://cdn-icons-png.flaticon.com/128/2422/2422678.png',
+        description: 'Rich and aromatic Indian curries, biryanis and tandoori specialties',
+        restaurants: [
+            { name: 'Spice Palace', rating: 4.6, delivery: '35-45 min', distance: 3.6 },
+            { name: 'Curry Palace', rating: 4.5, delivery: '30-40 min', distance: 2.9 },
+            { name: 'Tandoor House', rating: 4.7, delivery: '40-50 min', distance: 4.7 },
+            { name: 'Mumbai Express', rating: 4.3, delivery: '25-35 min', distance: 2.1 },
+            { name: 'India Gate', rating: 4.8, delivery: '45-55 min', distance: 5.8 }
+        ],
+        items: ['Chicken Tikka Masala', 'Butter Chicken', 'Biryani', 'Naan Bread', 'Samosas', 'Tandoori Chicken', 'Palak Paneer', 'Mango Lassi']
+    },
+    healthy: {
+        name: 'Healthy & Fresh',
+        icon: 'https://cdn-icons-png.flaticon.com/128/3143/3143609.png',
+        description: 'Fresh salads, bowls and healthy meal options',
+        restaurants: [
+            { name: 'Fresh Bowl', rating: 4.5, delivery: '20-30 min', distance: 1.6 },
+            { name: 'Green Leaf', rating: 4.6, delivery: '25-35 min', distance: 2.3 },
+            { name: 'Juice Bar', rating: 4.4, delivery: '15-25 min', distance: 1.1 },
+            { name: 'Salad Stop', rating: 4.3, delivery: '20-30 min', distance: 1.8 },
+            { name: 'Healthy Bites', rating: 4.7, delivery: '30-40 min', distance: 3.2 }
+        ],
+        items: ['Caesar Salad', 'Greek Salad', 'Buddha Bowl', 'Smoothie Bowl', 'Green Smoothie', 'Protein Bowl', 'Wraps', 'Fresh Juice']
+    },
+    desserts: {
+        name: 'Desserts & Sweets',
+        icon: 'https://cdn-icons-png.flaticon.com/128/3081/3081986.png',
+        description: 'Sweet treats, cakes, ice cream and pastries',
+        restaurants: [
+            { name: 'Sweet Treats', rating: 4.5, delivery: '25-35 min', distance: 2.2 },
+            { name: 'Ice Cream Palace', rating: 4.6, delivery: '20-30 min', distance: 1.9 },
+            { name: 'Cake Shop', rating: 4.7, delivery: '30-40 min', distance: 3.1 },
+            { name: 'Bakery Delights', rating: 4.4, delivery: '25-35 min', distance: 2.5 },
+            { name: 'Dessert Bar', rating: 4.8, delivery: '35-45 min', distance: 4.2 }
+        ],
+        items: ['Chocolate Cake', 'Vanilla Ice Cream', 'Croissants', 'Cupcakes', 'Cookies', 'Brownies', 'Cheesecake', 'Macarons']
+    }
+};
+
+function showCuisineDetails(cuisine) {
+    const data = cuisineData[cuisine];
+    if (!data) return;
+    
+    const modal = document.getElementById('cuisineModal');
+    const modalContent = document.getElementById('cuisineModalContent');
+    
+    modalContent.innerHTML = `
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <img src="${data.icon}" alt="${data.name}" style="width: 80px; height: 80px; margin-bottom: 1rem;">
+            <h2 style="font-size: 2rem; color: var(--text-primary); margin-bottom: 0.5rem;">${data.name}</h2>
+            <p style="color: var(--text-secondary); font-size: 1.1rem;">${data.description}</p>
+        </div>
+        
+        <div style="margin-bottom: 2rem;">
+            <h3 style="font-size: 1.5rem; color: var(--text-primary); margin-bottom: 1rem;">
+                🍽️ Popular Items
+            </h3>
+            <div style="display: flex; flex-wrap: wrap; gap: 0.75rem;">
+                ${data.items.map(item => `
+                    <span style="background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(255, 107, 53, 0.05)); 
+                                 padding: 0.6rem 1.2rem; 
+                                 border-radius: 25px; 
+                                 border: 2px solid rgba(255, 107, 53, 0.2);
+                                 font-size: 0.95rem;
+                                 color: var(--text-primary);
+                                 font-weight: 500;">
+                        ${item}
+                    </span>
+                `).join('')}
+            </div>
+        </div>
+        
+        <div>
+            <h3 style="font-size: 1.5rem; color: var(--text-primary); margin-bottom: 1rem;">
+                🏪 Available Restaurants (${data.restaurants.length})
+            </h3>
+            <div style="display: grid; gap: 1rem;">
+                ${data.restaurants.map(restaurant => `
+                    <div style="background: #f8f9fa; 
+                                padding: 1.25rem; 
+                                border-radius: 12px; 
+                                border: 2px solid #e9ecef;
+                                transition: all 0.2s ease;
+                                cursor: pointer;"
+                         onmouseover="this.style.borderColor='var(--primary-color)'; this.style.transform='translateX(5px)';"
+                         onmouseout="this.style.borderColor='#e9ecef'; this.style.transform='translateX(0)';">
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                            <div>
+                                <h4 style="font-size: 1.2rem; color: var(--text-primary); margin-bottom: 0.5rem;">
+                                    ${restaurant.name}
+                                </h4>
+                                <div style="display: flex; gap: 1.5rem; flex-wrap: wrap; font-size: 0.9rem; color: var(--text-secondary);">
+                                    <span>⭐ ${restaurant.rating}</span>
+                                    <span>🕐 ${restaurant.delivery}</span>
+                                    <span>📍 ${restaurant.distance} KM</span>
+                                </div>
+                            </div>
+                            <button onclick="selectRestaurant('${restaurant.name}', ${restaurant.distance})"
+                                    style="background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+                                           color: white;
+                                           border: none;
+                                           padding: 0.75rem 1.5rem;
+                                           border-radius: 8px;
+                                           font-weight: 600;
+                                           cursor: pointer;
+                                           transition: all 0.2s ease;"
+                                    onmouseover="this.style.transform='scale(1.05)'"
+                                    onmouseout="this.style.transform='scale(1)'">
+                                Order Now
+                            </button>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+    `;
+    
+    modal.classList.add('show');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeCuisineModal() {
+    const modal = document.getElementById('cuisineModal');
+    modal.classList.remove('show');
+    document.body.style.overflow = 'auto';
+}
+
+function selectRestaurant(restaurantName, distance) {
+    closeCuisineModal();
+    
+    document.getElementById('restaurantName').value = restaurantName;
+    document.getElementById('deliveryDistance').value = distance;
+    
+    document.getElementById('addOrderForm').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    
+    setTimeout(() => {
+        document.getElementById('orderId').focus();
+    }, 500);
+    
+    showToast(`✨ ${restaurantName} selected! Complete the order details.`, 'success');
+}
+
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeCuisineModal();
+    }
+});
+
+console.log('%c🍔 FoodFleet - Food Delivery Manager Loaded Successfully!', 'color: #ff6b35; font-size: 16px; font-weight: bold;');
+console.log('%cDeveloped by: Ajay Yadav | Contact: +91 8126783617 | Email: ajayyadav3617@outlook.com', 'color: #27ae60; font-size: 12px; font-weight: bold;');
 console.log('%cTip: Use loadDemoData() in console to load sample orders from various cuisines', 'color: #1e293b; font-size: 12px;');
+console.log('%cNew: Click on any cuisine card to explore restaurants and menu items!', 'color: #667eea; font-size: 12px;');
+console.log('%c24/7 Service Available | 142 Govindpuram, Ghaziabad, U.P 201013', 'color: #7f8c8d; font-size: 11px;');

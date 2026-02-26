@@ -12,10 +12,10 @@
 <body>
     <nav class="navbar">
         <div class="nav-container">
-            <div class="logo">
+            <a href="#hero" class="logo">
                 <span class="logo-icon">🍔</span>
                 <span class="logo-text">FoodFleet</span>
-            </div>
+            </a>
             <ul class="nav-links">
                 <li><a href="#hero">Home</a></li>
                 <li><a href="#features">Features</a></li>
@@ -396,21 +396,23 @@
                 </div>
                 <div class="contact-form-container">
                     <h3>Send us a message</h3>
-                    <form class="contact-form">
+                    <form class="contact-form" action="https://formspree.io/f/xreajapj" method="POST">
                         <div class="form-row">
                             <div class="form-group">
-                                <input type="text" placeholder="First Name" required>
+                                <input type="text" name="firstName" placeholder="First Name" required>
                             </div>
                             <div class="form-group">
-                                <input type="text" placeholder="Last Name" required>
+                                <input type="text" name="lastName" placeholder="Last Name" required>
                             </div>
                         </div>
                         <div class="form-group">
-                            <input type="email" placeholder="Email Address" required>
+                            <input type="email" name="email" placeholder="Email Address" required>
                         </div>
                         <div class="form-group">
-                            <textarea placeholder="Your Message" rows="4" required></textarea>
+                            <textarea name="message" placeholder="Your Message" rows="4" required></textarea>
                         </div>
+                        <input type="hidden" name="_subject" value="New message from FoodFleet website">
+                        <input type="hidden" name="_next" value="">
                         <button type="submit" class="btn-contact">Send Message</button>
                     </form>
                 </div>
@@ -422,10 +424,10 @@
         <div class="footer-content">
             <div class="footer-grid">
                 <div class="footer-column">
-                    <div class="footer-logo">
+                    <a href="#hero" class="footer-logo">
                         <span class="logo-icon">🍔</span>
                         <span class="logo-text">FoodFleet</span>
-                    </div>
+                    </a>
                     <p>Your trusted food delivery partner. Smart order management with real-time tracking and intelligent delivery assignment. Available 24/7 for your convenience.</p>
                 </div>
                 <div class="footer-column">
@@ -451,10 +453,34 @@
                 <div class="footer-column">
                     <h4>Contact Info</h4>
                     <ul>
-                        <li>📞 +91 8126783617</li>
-                        <li>✉️ ajayyadav3617@outlook.com</li>
-                        <li>📍 142 Govindpuram, Ghaziabad, U.P 201013</li>
-                        <li>🕒 24/7 Service Available</li>
+                        <li>
+                            <span class="contact-icon">📞</span>
+                            <div>
+                                <strong>+91 8126783617</strong>
+                                <br><small>Call us anytime</small>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="contact-icon">✉️</span>
+                            <div>
+                                <strong>ajayyadav3617@outlook.com</strong>
+                                <br><small>Email support</small>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="contact-icon">📍</span>
+                            <div>
+                                <strong>142 Govindpuram</strong>
+                                <br><small>Ghaziabad, U.P 201013</small>
+                            </div>
+                        </li>
+                        <li>
+                            <span class="contact-icon">🕒</span>
+                            <div>
+                                <strong>24/7 Service Available</strong>
+                                <br><small>Always ready to serve</small>
+                            </div>
+                        </li>
                     </ul>
                 </div>
             </div>

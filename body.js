@@ -11,9 +11,67 @@ document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('addOrderForm');
     form.addEventListener('submit', handleAddOrder);
     
+    const contactForm = document.querySelector('.contact-form');
+    if (contactForm) {
+        contactForm.addEventListener('submit', handleContactForm);
+    }
+    
+    setupLogoClicks();
+    
     renderOrders();
     updateStats();
 });
+
+function setupLogoClicks() {
+    const logos = document.querySelectorAll('.logo, .footer-logo');
+    logos.forEach(logo => {
+        logo.addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('hero').scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'start' 
+            });
+        });
+    });
+}
+
+function handleContactForm(event) {
+    event.preventDefault();
+    
+    const form = event.target;
+    const formData = new FormData(form);
+    
+    // Show loading state
+    const submitBtn = form.querySelector('.btn-contact');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '⏳ Sending...';
+    submitBtn.disabled = true;
+    
+    // Submit to Formspree
+    fetch(form.action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'Accept': 'application/json'
+        }
+    })
+    .then(response => {
+        if (response.ok) {
+            showToast('✅ Message sent successfully! We will get back to you soon.', 'success');
+            form.reset();
+        } else {
+            throw new Error('Form submission failed');
+        }
+    })
+    .catch(error => {
+        console.error('Form submission error:', error);
+        showToast('❌ Failed to send message. Please try again or contact us directly.', 'error');
+    })
+    .finally(() => {
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+    });
+}
 
 
 
@@ -652,4 +710,5 @@ console.log('%c🍔 FoodFleet - Food Delivery Manager Loaded Successfully!', 'co
 console.log('%cDeveloped by: Ajay Yadav | Contact: +91 8126783617 | Email: ajayyadav3617@outlook.com', 'color: #27ae60; font-size: 12px; font-weight: bold;');
 console.log('%cTip: Use loadDemoData() in console to load sample orders from various cuisines', 'color: #1e293b; font-size: 12px;');
 console.log('%cClick on any cuisine card to explore restaurants and menu items!', 'color: #667eea; font-size: 12px;');
+console.log('%cContact form powered by Formspree - messages will be sent to ajayyadav3617@outlook.com', 'color: #9b59b6; font-size: 11px;');
 console.log('%c24/7 Service Available | 142 Govindpuram, Ghaziabad, U.P 201013', 'color: #7f8c8d; font-size: 11px;');

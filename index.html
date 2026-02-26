@@ -3,132 +3,381 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Food Delivery Order Manager</title>
+    <title>FoodHub - Food Delivery Manager</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>🍕 Food Delivery Order Manager</h1>
-            <p class="subtitle">Manage orders and assign deliveries efficiently</p>
-        </header>
-
-        <div class="main-content">
-            <section class="card add-order-section">
-                <h2>📝 Add New Order</h2>
-                <form id="addOrderForm">
-                    <div class="form-group">
-                        <label for="orderId">Order ID *</label>
-                        <input type="text" id="orderId" placeholder="e.g., ORD001" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="restaurantName">Restaurant Name *</label>
-                        <input type="text" id="restaurantName" placeholder="e.g., Pizza Palace" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="itemCount">Number of Items *</label>
-                        <input type="number" id="itemCount" min="1" placeholder="e.g., 3" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="deliveryDistance">Delivery Distance (KM) *</label>
-                        <input type="number" id="deliveryDistance" step="0.1" min="0.1" placeholder="e.g., 5.5" required>
-                    </div>
-                    <div class="form-group checkbox-group">
-                        <label>
-                            <input type="checkbox" id="isPaid">
-                            <span>Order is Paid</span>
-                        </label>
-                    </div>
-                    <button type="submit" class="btn btn-primary">
-                        <span>➕</span> Add Order
-                    </button>
-                </form>
-            </section>
-
-            <section class="card filter-section">
-                <h2>🔍 Filter & Assign Delivery</h2>
-                
-                <div class="filter-controls">
-                    <div class="form-group">
-                        <label for="statusFilter">Filter by Payment Status</label>
-                        <select id="statusFilter">
-                            <option value="all">All Orders</option>
-                            <option value="paid">Paid Only</option>
-                            <option value="unpaid">Unpaid Only</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="distanceFilter">Maximum Distance (KM)</label>
-                        <input type="number" id="distanceFilter" step="0.1" min="0" placeholder="e.g., 10">
-                    </div>
-                    <button type="button" class="btn btn-secondary" onclick="applyFilters()">
-                        <span>🔍</span> Apply Filters
-                    </button>
-                    <button type="button" class="btn btn-outline" onclick="clearFilters()">
-                        <span>🔄</span> Clear Filters
-                    </button>
-                </div>
-
-                <div class="assign-controls">
-                    <h3>🚚 Assign Delivery</h3>
-                    <div class="form-group">
-                        <label for="maxDistanceAssign">Maximum Distance for Assignment (KM) *</label>
-                        <input type="number" id="maxDistanceAssign" step="0.1" min="0.1" placeholder="e.g., 10" required>
-                    </div>
-                    <button type="button" class="btn btn-success" onclick="assignDelivery()">
-                        <span>✅</span> Assign Nearest Unpaid Order
-                    </button>
-                </div>
-
-                <div id="assignmentResult" class="result-panel" style="display: none;">
-                    <h4>Assignment Result:</h4>
-                    <div id="resultContent"></div>
-                </div>
-            </section>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <span class="logo-icon">🍔</span>
+                <span class="logo-text">FoodHub</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#hero">Home</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#orders">Orders</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <button class="nav-cta" onclick="document.getElementById('addOrderForm').scrollIntoView({behavior: 'smooth'})">Place Order</button>
         </div>
+    </nav>
 
-        <section class="card orders-section">
-            <div class="section-header">
-                <h2>📋 All Orders</h2>
-                <div class="stats">
-                    <span class="stat-badge">Total: <strong id="totalOrders">0</strong></span>
-                    <span class="stat-badge stat-paid">Paid: <strong id="paidOrders">0</strong></span>
-                    <span class="stat-badge stat-unpaid">Unpaid: <strong id="unpaidOrders">0</strong></span>
+    <section id="hero" class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1 class="hero-title">Your Favorite Food, Delivered Fast</h1>
+                <p class="hero-subtitle">From Pizza to Sushi, Burgers to Biryani - Order from thousands of restaurants. Smart delivery management with real-time tracking and intelligent order assignment.</p>
+                <div class="hero-buttons">
+                    <button class="btn-hero primary" onclick="document.getElementById('addOrderForm').scrollIntoView({behavior: 'smooth'})">
+                        Order Now
+                    </button>
+                    <button class="btn-hero secondary" onclick="document.getElementById('orders').scrollIntoView({behavior: 'smooth'})">
+                        View Orders
+                    </button>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <span class="stat-number" id="totalOrders">0</span>
+                        <span class="stat-label">Total Orders</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="paidOrders">0</span>
+                        <span class="stat-label">Completed</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="unpaidOrders">0</span>
+                        <span class="stat-label">Pending</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="hero-circle"></div>
+                <div class="hero-illustration">
+                    <div class="food-icons">
+                        <span class="food-icon">🍕</span>
+                        <span class="food-icon">🍔</span>
+                        <span class="food-icon">🍜</span>
+                        <span class="food-icon">🍣</span>
+                        <span class="food-icon">🌮</span>
+                        <span class="food-icon">🍝</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="features-section">
+        <div class="section-header-center">
+            <h2 class="section-title">Why Choose FoodHub</h2>
+            <p class="section-description">Advanced delivery management system that handles orders from all your favorite restaurants</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🚚</div>
+                <h3>Fast Delivery</h3>
+                <p>Lightning-fast delivery with our smart routing algorithm that automatically finds and assigns the nearest available order.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3>Smart Assignment</h3>
+                <p>Intelligent system automatically assigns deliveries to the nearest unpaid orders within your specified distance radius.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Real-time Tracking</h3>
+                <p>Track all your orders in real-time with comprehensive dashboard, advanced filtering, and live status updates.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🍽️</div>
+                <h3>All Cuisines</h3>
+                <p>Pizza, Burgers, Sushi, Chinese, Indian, Italian, Mexican and more - order from any restaurant in your area.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="cuisines-section">
+        <div class="container-wide">
+            <div class="section-header-center">
+                <h2 class="section-title">Popular Cuisines We Deliver</h2>
+                <p class="section-description">Order from your favorite restaurants across all cuisine types</p>
+            </div>
+            <div class="cuisines-grid">
+                <div class="cuisine-card">
+                    <div class="cuisine-emoji">🍕</div>
+                    <h4>Italian</h4>
+                    <p>Pizza, Pasta, Risotto</p>
+                </div>
+                <div class="cuisine-card">
+                    <div class="cuisine-emoji">🍔</div>
+                    <h4>American</h4>
+                    <p>Burgers, Fries, Wings</p>
+                </div>
+                <div class="cuisine-card">
+                    <div class="cuisine-emoji">🍜</div>
+                    <h4>Chinese</h4>
+                    <p>Noodles, Fried Rice, Dim Sum</p>
+                </div>
+                <div class="cuisine-card">
+                    <div class="cuisine-emoji">🍣</div>
+                    <h4>Japanese</h4>
+                    <p>Sushi, Ramen, Tempura</p>
+                </div>
+                <div class="cuisine-card">
+                    <div class="cuisine-emoji">🌮</div>
+                    <h4>Mexican</h4>
+                    <p>Tacos, Burritos, Quesadillas</p>
+                </div>
+                <div class="cuisine-card">
+                    <div class="cuisine-emoji">🍛</div>
+                    <h4>Indian</h4>
+                    <p>Curry, Biryani, Tandoori</p>
+                </div>
+                <div class="cuisine-card">
+                    <div class="cuisine-emoji">🥗</div>
+                    <h4>Healthy</h4>
+                    <p>Salads, Bowls, Smoothies</p>
+                </div>
+                <div class="cuisine-card">
+                    <div class="cuisine-emoji">🍰</div>
+                    <h4>Desserts</h4>
+                    <p>Cakes, Ice Cream, Pastries</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="order-management" class="order-management">
+        <div class="container-wide">
+            <div class="management-grid">
+                <div class="management-card">
+                    <div class="card-header">
+                        <h2>📝 Place New Order</h2>
+                        <p>Add orders from any restaurant - all cuisines welcome</p>
+                    </div>
+                    <form id="addOrderForm" class="modern-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="orderId">Order ID</label>
+                                <input type="text" id="orderId" placeholder="e.g., ORD001" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="restaurantName">Restaurant Name</label>
+                                <input type="text" id="restaurantName" placeholder="e.g., Dragon Wok, Burger King" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="itemCount">Number of Items</label>
+                                <input type="number" id="itemCount" min="1" placeholder="e.g., 3" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="deliveryDistance">Delivery Distance (KM)</label>
+                                <input type="number" id="deliveryDistance" step="0.1" min="0.1" placeholder="e.g., 5.5" required>
+                            </div>
+                        </div>
+                        <div class="form-group checkbox-modern">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="isPaid">
+                                <span class="checkbox-custom"></span>
+                                <span>Order is Already Paid</span>
+                            </label>
+                        </div>
+                        <button type="submit" class="btn-submit">
+                            <span>➕</span> Add Order
+                        </button>
+                    </form>
+                </div>
+
+                <div class="management-card">
+                    <div class="card-header">
+                        <h2>🔍 Filter & Assign</h2>
+                        <p>Smart delivery assignment system</p>
+                    </div>
+                    <div class="filter-container">
+                        <div class="form-group">
+                            <label for="statusFilter">Filter by Payment Status</label>
+                            <select id="statusFilter">
+                                <option value="all">All Orders</option>
+                                <option value="paid">Paid Only</option>
+                                <option value="unpaid">Unpaid Only</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="distanceFilter">Maximum Distance (KM)</label>
+                            <input type="number" id="distanceFilter" step="0.1" min="0" placeholder="e.g., 10">
+                        </div>
+                        <div class="filter-buttons">
+                            <button type="button" class="btn-filter" onclick="applyFilters()">
+                                Apply Filters
+                            </button>
+                            <button type="button" class="btn-clear" onclick="clearFilters()">
+                                Clear
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="assign-container">
+                        <h3>🚚 Assign Delivery</h3>
+                        <div class="form-group">
+                            <label for="maxDistanceAssign">Maximum Distance (KM)</label>
+                            <input type="number" id="maxDistanceAssign" step="0.1" min="0.1" placeholder="e.g., 10" required>
+                        </div>
+                        <button type="button" class="btn-assign" onclick="assignDelivery()">
+                            Assign Nearest Order
+                        </button>
+                    </div>
+
+                    <div id="assignmentResult" class="result-panel" style="display: none;">
+                        <div id="resultContent"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="orders" class="orders-section">
+        <div class="container-wide">
+            <div class="section-header-flex">
+                <div>
+                    <h2 class="section-title">All Orders</h2>
+                    <p class="section-description">Manage and track all your food delivery orders</p>
                 </div>
             </div>
 
-            <div class="table-container">
-                <table id="ordersTable">
+            <div class="orders-table-container">
+                <table class="modern-table">
                     <thead>
                         <tr>
                             <th>Order ID</th>
-                            <th>Restaurant Name</th>
+                            <th>Restaurant</th>
                             <th>Items</th>
-                            <th>Distance (KM)</th>
-                            <th>Payment Status</th>
+                            <th>Distance</th>
+                            <th>Status</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody id="ordersTableBody">
                         <tr class="empty-state">
                             <td colspan="6">
-                                <div class="empty-message">
-                                    <span class="empty-icon">📦</span>
-                                    <p>No orders yet. Add your first order above!</p>
+                                <div class="empty-content">
+                                    <div class="empty-icon">🍽️</div>
+                                    <h3>No orders yet</h3>
+                                    <p>Start by adding your first food delivery order above!</p>
                                 </div>
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <div id="toast" class="toast"></div>
+    <section id="contact" class="contact-section">
+        <div class="container-wide">
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <h2>Get In Touch</h2>
+                    <p>Have questions about our food delivery management system? We're here to help with all your order tracking and delivery needs.</p>
+                    <div class="contact-details">
+                        <div class="contact-item">
+                            <div class="contact-icon">📍</div>
+                            <div>
+                                <h4>Address</h4>
+                                <p>123 Delivery Street, Food City, FC 12345</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon">📞</div>
+                            <div>
+                                <h4>Phone</h4>
+                                <p>1-800-FOOD-HUB</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon">🕒</div>
+                            <div>
+                                <h4>Hours</h4>
+                                <p>24/7 Delivery Service</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-form-container">
+                    <h3>Send us a message</h3>
+                    <form class="contact-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <input type="text" placeholder="First Name" required>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" placeholder="Last Name" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" placeholder="Email Address" required>
+                        </div>
+                        <div class="form-group">
+                            <textarea placeholder="Your Message" rows="4" required></textarea>
+                        </div>
+                        <button type="submit" class="btn-contact">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
 
-        <footer>
-            <p>© 2024 Food Delivery Order Manager | Built with ❤️</p>
-        </footer>
-    </div>
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <div class="footer-logo">
+                        <span class="logo-icon">🍔</span>
+                        <span class="logo-text">FoodHub</span>
+                    </div>
+                    <p>The ultimate food delivery management system. Order from any restaurant, track in real-time, and enjoy fast delivery from all your favorite cuisines.</p>
+                </div>
+                <div class="footer-column">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#hero">Home</a></li>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#orders">Orders</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Cuisines</h4>
+                    <ul>
+                        <li>Italian & Pizza</li>
+                        <li>Chinese & Asian</li>
+                        <li>Burgers & Fast Food</li>
+                        <li>Indian & Curry</li>
+                        <li>Sushi & Japanese</li>
+                        <li>Mexican & More</li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Contact Info</h4>
+                    <ul>
+                        <li>📞 1-800-FOOD-HUB</li>
+                        <li>✉️ support@foodhub.com</li>
+                        <li>📍 123 Delivery Street</li>
+                        <li>🕒 24/7 Service</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 FoodHub - Food Delivery Manager. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <div id="toast" class="toast"></div>
 
     <script src="body.js"></script>
 </body>

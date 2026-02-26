@@ -668,61 +668,7 @@ body {
     position: relative;
 }
 
-.autocomplete-wrapper {
-    position: relative;
-    width: 100%;
-}
 
-.autocomplete-suggestions {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background: white;
-    border: 2px solid var(--primary-color);
-    border-top: none;
-    border-radius: 0 0 var(--radius-sm) var(--radius-sm);
-    max-height: 200px;
-    overflow-y: auto;
-    z-index: 1000;
-    box-shadow: var(--shadow-lg);
-    display: none;
-}
-
-.autocomplete-suggestions.show {
-    display: block;
-}
-
-.autocomplete-item {
-    padding: 0.75rem 0.875rem;
-    cursor: pointer;
-    transition: var(--transition);
-    border-bottom: 1px solid var(--border-color);
-    font-size: 0.95rem;
-}
-
-.autocomplete-item:last-child {
-    border-bottom: none;
-}
-
-.autocomplete-item:hover,
-.autocomplete-item.active {
-    background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(255, 107, 53, 0.05));
-    color: var(--primary-dark);
-}
-
-.autocomplete-item strong {
-    color: var(--primary-color);
-    font-weight: 600;
-}
-
-.autocomplete-empty {
-    padding: 0.75rem 0.875rem;
-    text-align: center;
-    color: var(--text-muted);
-    font-size: 0.9rem;
-    font-style: italic;
-}
 
 .form-group label {
     font-weight: 500;

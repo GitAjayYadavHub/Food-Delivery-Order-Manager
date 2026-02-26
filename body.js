@@ -109,7 +109,12 @@ function handleAddOrder(event) {
     
     document.getElementById('addOrderForm').reset();
     
-    applyFilters();
+    // Reset filters to show all orders including the new one
+    currentFilters.status = 'all';
+    currentFilters.maxDistance = null;
+    filteredOrders = [...orders];
+    
+    renderOrders();
     updateStats();
     
     showToast(`✅ Order ${orderId} added successfully!`, 'success');
@@ -175,51 +180,86 @@ function applyFilters() {
     const statusFilter = document.getElementById('statusFilter').value;
     const distanceFilter = document.getElementById('distanceFilter').value;
     
-    currentFilters.status = statusFilter;
-    currentFilters.maxDistance = distanceFilter ? parseFloat(distanceFilter) : null;
+    console.log('Applying filters:', { statusFilter, distanceFilter });
     
+    // Validate distance filter
     if (distanceFilter && parseFloat(distanceFilter) < 0) {
         showToast('❌ Maximum distance cannot be negative!', 'error');
         return;
     }
     
+    // Update current filters
+    currentFilters.status = statusFilter;
+    currentFilters.maxDistance = distanceFilter ? parseFloat(distanceFilter) : null;
+    
+    console.log('Current filters set to:', currentFilters);
+    console.log('Total orders available:', orders.length);
+    
+    // Start with all orders
     filteredOrders = [...orders];
     
+    // Apply payment status filter
     if (statusFilter === 'paid') {
         filteredOrders = filteredOrders.filter(order => order.isPaid === true);
+        console.log(`After paid filter: ${filteredOrders.length} orders`);
     } else if (statusFilter === 'unpaid') {
         filteredOrders = filteredOrders.filter(order => order.isPaid === false);
+        console.log(`After unpaid filter: ${filteredOrders.length} orders`);
     }
     
+    // Apply distance filter
     if (currentFilters.maxDistance !== null && currentFilters.maxDistance > 0) {
+        const beforeDistance = filteredOrders.length;
         filteredOrders = filteredOrders.filter(order => order.deliveryDistance <= currentFilters.maxDistance);
+        console.log(`After distance filter (${currentFilters.maxDistance}km): ${filteredOrders.length} orders (was ${beforeDistance})`);
     }
     
+    console.log('Final filtered orders:', filteredOrders);
+    
+    // Update the display
     renderOrders();
     
-    if (filteredOrders.length === 0 && orders.length > 0) {
-        showToast('🔍 No orders match the current filters.', 'warning');
+    // Show feedback to user
+    if (orders.length === 0) {
+        showToast('📝 Add some orders first to test filtering!', 'warning');
+    } else if (filteredOrders.length === 0) {
+        showToast('🔍 No orders match the current filters. Try different criteria.', 'warning');
     } else if (statusFilter !== 'all' || currentFilters.maxDistance !== null) {
         showToast(`🔍 Showing ${filteredOrders.length} of ${orders.length} orders.`, 'success');
     }
 }
 
 function clearFilters() {
+    // Reset form fields
     document.getElementById('statusFilter').value = 'all';
     document.getElementById('distanceFilter').value = '';
     
+    // Reset filter state
     currentFilters.status = 'all';
     currentFilters.maxDistance = null;
     
+    console.log('Filters cleared. Showing all orders:', orders.length);
+    
+    // Show all orders
     filteredOrders = [...orders];
     renderOrders();
     
-    showToast('🔄 Filters cleared. Showing all orders.', 'success');
+    // Clear any assignment results
+    const resultPanel = document.getElementById('assignmentResult');
+    if (resultPanel) {
+        resultPanel.style.display = 'none';
+    }
+    
+    showToast(`🔄 Filters cleared. Showing all ${orders.length} orders.`, 'success');
 }
 
 function assignDelivery() {
-    const maxDistanceInput = document.getElementById('maxDistanceAssign').value;
+    console.log('Assign delivery called');
     
+    const maxDistanceInput = document.getElementById('maxDistanceAssign').value;
+    console.log('Max distance input:', maxDistanceInput);
+    
+    // Validate input
     if (!maxDistanceInput || maxDistanceInput === '') {
         showToast('❌ Please enter a maximum distance for assignment!', 'error');
         document.getElementById('maxDistanceAssign').focus();
@@ -230,27 +270,59 @@ function assignDelivery() {
     
     if (isNaN(maxDistance)) {
         showToast('❌ Maximum distance must be a valid number!', 'error');
+        document.getElementById('maxDistanceAssign').focus();
         return;
     }
     
     if (maxDistance <= 0) {
         showToast('❌ Maximum distance must be greater than 0!', 'error');
+        document.getElementById('maxDistanceAssign').focus();
         return;
     }
     
-    const eligibleOrders = orders.filter(order => 
-        !order.isPaid && order.deliveryDistance <= maxDistance
-    );
+    console.log(`Looking for unpaid orders within ${maxDistance} KM`);
+    console.log('All orders:', orders);
     
-    if (eligibleOrders.length === 0) {
+    // Check if we have any orders at all
+    if (orders.length === 0) {
         displayAssignmentResult({
             success: false,
-            message: 'No order available',
-            details: `No unpaid orders found within ${maxDistance} KM.`
+            message: 'No orders available',
+            details: 'Please add some orders first before assigning delivery.'
         });
         return;
     }
     
+    // Filter for eligible orders (unpaid and within distance)
+    const eligibleOrders = orders.filter(order => {
+        const isUnpaid = !order.isPaid;
+        const withinDistance = order.deliveryDistance <= maxDistance;
+        console.log(`Order ${order.orderId}: isPaid=${order.isPaid}, distance=${order.deliveryDistance}km, eligible=${isUnpaid && withinDistance}`);
+        return isUnpaid && withinDistance;
+    });
+    
+    console.log(`Found ${eligibleOrders.length} eligible orders:`, eligibleOrders);
+    
+    // Check if any eligible orders found
+    if (eligibleOrders.length === 0) {
+        const unpaidOrders = orders.filter(order => !order.isPaid);
+        let details;
+        if (unpaidOrders.length === 0) {
+            details = 'All orders are already paid. No delivery assignment needed.';
+        } else {
+            const closestUnpaid = Math.min(...unpaidOrders.map(order => order.deliveryDistance));
+            details = `No unpaid orders within ${maxDistance} KM. Closest unpaid order is ${closestUnpaid} KM away.`;
+        }
+        
+        displayAssignmentResult({
+            success: false,
+            message: 'No order available',
+            details: details
+        });
+        return;
+    }
+    
+    // Find the nearest order
     let nearestOrder = eligibleOrders[0];
     for (let i = 1; i < eligibleOrders.length; i++) {
         if (eligibleOrders[i].deliveryDistance < nearestOrder.deliveryDistance) {
@@ -258,10 +330,13 @@ function assignDelivery() {
         }
     }
     
+    console.log('Nearest order selected:', nearestOrder);
+    
     displayAssignmentResult({
         success: true,
         order: nearestOrder,
-        totalEligible: eligibleOrders.length
+        totalEligible: eligibleOrders.length,
+        maxDistance: maxDistance
     });
 }
 
@@ -269,57 +344,93 @@ function displayAssignmentResult(result) {
     const resultPanel = document.getElementById('assignmentResult');
     const resultContent = document.getElementById('resultContent');
     
+    if (!resultPanel || !resultContent) {
+        console.error('Assignment result elements not found');
+        return;
+    }
+    
     resultPanel.style.display = 'block';
     
     if (result.success) {
         resultPanel.className = 'result-panel success';
         resultContent.innerHTML = `
-            <div style="line-height: 2;">
-                <p style="font-size: 1.1rem; color: #27ae60; font-weight: 600; margin-bottom: 10px;">
+            <div style="line-height: 2; padding: 1rem; background: #f8fff9; border-radius: 8px; border: 1px solid #27ae60;">
+                <p style="font-size: 1.2rem; color: #27ae60; font-weight: 600; margin-bottom: 15px;">
                     ✅ Delivery Assigned Successfully!
                 </p>
-                <p><strong>Order ID:</strong> ${result.order.orderId}</p>
-                <p><strong>Restaurant:</strong> ${result.order.restaurantName}</p>
-                <p><strong>Items:</strong> ${result.order.itemCount}</p>
-                <p><strong>Distance:</strong> ${result.order.deliveryDistance} KM</p>
-                <p><strong>Payment Status:</strong> <span style="color: #f39c12;">Unpaid</span></p>
-                ${result.totalEligible > 1 ? `<p style="margin-top: 10px; color: #7f8c8d;"><em>(Selected from ${result.totalEligible} eligible orders)</em></p>` : ''}
+                <div style="background: white; padding: 1rem; border-radius: 6px; margin-bottom: 1rem;">
+                    <p><strong>Order ID:</strong> <span style="color: #2c3e50;">${result.order.orderId}</span></p>
+                    <p><strong>Restaurant:</strong> <span style="color: #2c3e50;">${result.order.restaurantName}</span></p>
+                    <p><strong>Items:</strong> <span style="color: #2c3e50;">${result.order.itemCount}</span></p>
+                    <p><strong>Distance:</strong> <span style="color: #2c3e50;">${result.order.deliveryDistance} KM</span></p>
+                    <p><strong>Payment Status:</strong> <span style="color: #f39c12; font-weight: 600;">⏳ Unpaid</span></p>
+                </div>
+                ${result.totalEligible > 1 ? `
+                    <p style="color: #7f8c8d; font-style: italic; font-size: 0.9rem;">
+                        📊 Selected from ${result.totalEligible} eligible orders within ${result.maxDistance || 'specified'} KM
+                    </p>
+                ` : `
+                    <p style="color: #7f8c8d; font-style: italic; font-size: 0.9rem;">
+                        🎯 This was the only eligible order within ${result.maxDistance || 'specified'} KM
+                    </p>
+                `}
             </div>
         `;
         showToast('✅ Nearest unpaid order assigned successfully!', 'success');
     } else {
         resultPanel.className = 'result-panel error';
         resultContent.innerHTML = `
-            <div style="line-height: 2;">
-                <p style="font-size: 1.1rem; color: #e74c3c; font-weight: 600; margin-bottom: 10px;">
+            <div style="line-height: 2; padding: 1rem; background: #fff5f5; border-radius: 8px; border: 1px solid #e74c3c;">
+                <p style="font-size: 1.2rem; color: #e74c3c; font-weight: 600; margin-bottom: 15px;">
                     ❌ ${result.message}
                 </p>
-                <p style="color: #7f8c8d;">${result.details}</p>
+                <div style="background: white; padding: 1rem; border-radius: 6px;">
+                    <p style="color: #7f8c8d; font-size: 1rem;">${result.details}</p>
+                </div>
             </div>
         `;
         showToast('❌ ' + result.message, 'error');
     }
     
-    resultPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    // Scroll to result with a slight delay to ensure rendering
+    setTimeout(() => {
+        resultPanel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 100);
 }
 
 function renderOrders() {
     const tableBody = document.getElementById('ordersTableBody');
     
-    const ordersToDisplay = filteredOrders.length > 0 || currentFilters.status !== 'all' || currentFilters.maxDistance !== null
-        ? filteredOrders
-        : orders;
+    if (!tableBody) {
+        console.error('Orders table body not found');
+        return;
+    }
+    
+    // Determine which orders to display
+    let ordersToDisplay;
+    if (currentFilters.status !== 'all' || currentFilters.maxDistance !== null) {
+        ordersToDisplay = filteredOrders;
+        console.log('Displaying filtered orders:', ordersToDisplay.length);
+    } else {
+        ordersToDisplay = orders;
+        console.log('Displaying all orders:', ordersToDisplay.length);
+    }
     
     tableBody.innerHTML = '';
     
     if (ordersToDisplay.length === 0) {
+        const emptyMessage = orders.length === 0 
+            ? { title: 'No orders yet', text: 'Add your first order above!' }
+            : { title: 'No matching orders', text: 'No orders match the current filters. Try different criteria or clear filters.' };
+            
         tableBody.innerHTML = `
             <tr class="empty-state">
                 <td colspan="6">
                     <div class="empty-content">
                         <span class="empty-icon">📦</span>
-                        <h3>${orders.length === 0 ? 'No orders yet' : 'No matching orders'}</h3>
-                        <p>${orders.length === 0 ? 'Add your first order above!' : 'No orders match the current filters.'}</p>
+                        <h3>${emptyMessage.title}</h3>
+                        <p>${emptyMessage.text}</p>
+                        ${orders.length > 0 ? '<button onclick="clearFilters()" style="margin-top: 1rem; padding: 0.5rem 1rem; background: var(--primary-color); color: white; border: none; border-radius: 4px; cursor: pointer;">Clear Filters</button>' : ''}
                     </div>
                 </td>
             </tr>
@@ -327,11 +438,17 @@ function renderOrders() {
         return;
     }
     
+    // Sort orders by delivery distance (nearest first)
     const sortedOrders = [...ordersToDisplay].sort((a, b) => a.deliveryDistance - b.deliveryDistance);
     
     sortedOrders.forEach((order, index) => {
         const row = document.createElement('tr');
         row.style.animation = `fadeIn 0.3s ease ${index * 0.05}s both`;
+        
+        // Highlight unpaid orders for easy identification
+        if (!order.isPaid) {
+            row.style.backgroundColor = 'rgba(255, 107, 53, 0.05)';
+        }
         
         row.innerHTML = `
             <td><strong>${escapeHtml(order.orderId)}</strong></td>
@@ -352,6 +469,8 @@ function renderOrders() {
         
         tableBody.appendChild(row);
     });
+    
+    console.log(`Rendered ${sortedOrders.length} orders in table`);
 }
 
 function deleteOrder(orderId) {
@@ -706,9 +825,10 @@ document.addEventListener('keydown', function(e) {
     }
 });
 
-console.log('%c🍔 FoodFleet - Food Delivery Manager Loaded Successfully!', 'color: #ff6b35; font-size: 16px; font-weight: bold;');
+console.log('%c📚 FoodFleet - Food Delivery Manager Loaded Successfully!', 'color: #ff6b35; font-size: 16px; font-weight: bold;');
 console.log('%cDeveloped by: Ajay Yadav | Contact: +91 8126783617 | Email: ajayyadav3617@outlook.com', 'color: #27ae60; font-size: 12px; font-weight: bold;');
 console.log('%cTip: Use loadDemoData() in console to load sample orders from various cuisines', 'color: #1e293b; font-size: 12px;');
 console.log('%cClick on any cuisine card to explore restaurants and menu items!', 'color: #667eea; font-size: 12px;');
 console.log('%cContact form powered by Formspree - messages will be sent to ajayyadav3617@outlook.com', 'color: #9b59b6; font-size: 11px;');
+console.log('%c🔍 Filter & Assign functions enhanced with debug logging', 'color: #e67e22; font-size: 11px;');
 console.log('%c24/7 Service Available | 142 Govindpuram, Ghaziabad, U.P 201013', 'color: #7f8c8d; font-size: 11px;');

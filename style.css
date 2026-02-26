@@ -95,7 +95,10 @@ body {
 }
 
 .logo-icon {
-    font-size: 2rem;
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    transition: var(--transition);
 }
 
 .logo-text {
@@ -1260,8 +1263,11 @@ body {
 }
 
 .footer-logo .logo-icon {
-    font-size: 2rem;
+    width: 45px;
+    height: 45px;
+    object-fit: contain;
     filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+    transition: var(--transition);
 }
 
 .footer-bottom {
@@ -1582,6 +1588,16 @@ body {
     .footer-logo {
         font-size: 1.5rem;
         justify-content: center;
+    }
+    
+    .footer-logo .logo-icon {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .logo-icon {
+        width: 30px;
+        height: 30px;
     }
     
     .footer-bottom p {
